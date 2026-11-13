@@ -1,0 +1,636 @@
+{
+  "project_id": "tunguska",
+  "seed": 42,
+  "motion": true,
+  "parallax": true,
+  "fps": 30,
+  "total_duration": 78.4,
+  "canvas_size": [
+    1920,
+    1080
+  ],
+  "oversample": 1.25,
+  "punch_ins": [
+    {
+      "word": "Flattened",
+      "score": 0.7,
+      "cue": "02.3",
+      "t_in": 9.947,
+      "t_out": 11.227,
+      "duration": 1.28,
+      "zoom": 1.043,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Tunguska",
+      "score": 0.7,
+      "cue": "04.3",
+      "t_in": 19.977,
+      "t_out": 21.417,
+      "duration": 1.44,
+      "zoom": 1.046,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Pine",
+      "score": 0.7,
+      "cue": "05.5",
+      "t_in": 28.524,
+      "t_out": 29.924,
+      "duration": 1.4,
+      "zoom": 1.059,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Moscow,",
+      "score": 0.7,
+      "cue": "06.8",
+      "t_in": 36.665,
+      "t_out": 38.165,
+      "duration": 1.5,
+      "zoom": 1.042,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "People",
+      "score": 0.7,
+      "cue": "12.4",
+      "t_in": 68.305,
+      "t_out": 69.695,
+      "duration": 1.39,
+      "zoom": 1.043,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Britain",
+      "score": 0.7,
+      "cue": "15.6",
+      "t_in": 86.118,
+      "t_out": 87.558,
+      "duration": 1.44,
+      "zoom": 1.067,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Russian",
+      "score": 0.7,
+      "cue": "20.3",
+      "t_in": 112.411,
+      "t_out": 113.811,
+      "duration": 1.4,
+      "zoom": 1.044,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "one",
+      "score": 1.0,
+      "cue": "24.9",
+      "t_in": 134.93,
+      "t_out": 136.19,
+      "duration": 1.26,
+      "zoom": 1.07,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Kulik",
+      "score": 0.7,
+      "cue": "26.2",
+      "t_in": 144.89,
+      "t_out": 146.18,
+      "duration": 1.29,
+      "zoom": 1.045,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Most",
+      "score": 0.9,
+      "cue": "30.14",
+      "t_in": 168.432,
+      "t_out": 169.732,
+      "duration": 1.3,
+      "zoom": 1.046,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "four:",
+      "score": 1.0,
+      "cue": "32.1",
+      "t_in": 177.887,
+      "t_out": 179.327,
+      "duration": 1.44,
+      "zoom": 1.058,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "1946,",
+      "score": 1.0,
+      "cue": "33.7",
+      "t_in": 186.256,
+      "t_out": 187.666,
+      "duration": 1.41,
+      "zoom": 1.06,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "never",
+      "score": 0.9,
+      "cue": "34.9",
+      "t_in": 195.666,
+      "t_out": 196.756,
+      "duration": 1.09,
+      "zoom": 1.041,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "one",
+      "score": 1.0,
+      "cue": "40.3",
+      "t_in": 223.752,
+      "t_out": 225.212,
+      "duration": 1.46,
+      "zoom": 1.06,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "never",
+      "score": 0.9,
+      "cue": "44.2",
+      "t_in": 249.665,
+      "t_out": 251.075,
+      "duration": 1.41,
+      "zoom": 1.047,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "twenty",
+      "score": 1.0,
+      "cue": "46.10",
+      "t_in": 261.224,
+      "t_out": 262.524,
+      "duration": 1.3,
+      "zoom": 1.055,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "hundred",
+      "score": 1.0,
+      "cue": "47.8",
+      "t_in": 269.098,
+      "t_out": 270.338,
+      "duration": 1.24,
+      "zoom": 1.055,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Tunguska",
+      "score": 0.7,
+      "cue": "49.4",
+      "t_in": 278.25,
+      "t_out": 279.64,
+      "duration": 1.39,
+      "zoom": 1.041,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "most",
+      "score": 0.9,
+      "cue": "53.11",
+      "t_in": 302.957,
+      "t_out": 304.207,
+      "duration": 1.25,
+      "zoom": 1.051,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Siberia?",
+      "score": 0.7,
+      "cue": "55.6",
+      "t_in": 313.536,
+      "t_out": 314.736,
+      "duration": 1.2,
+      "zoom": 1.042,
+      "easing": "easeOutQuad"
+    }
+  ],
+  "camera_shakes": [],
+  "scenes": [
+    {
+      "scene_idx": 0,
+      "cue": "01.0",
+      "t0": 0.0,
+      "t1": 8.525,
+      "duration": 8.525,
+      "img": "img/s01.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake,punch@\"flat\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "01.5",
+          "t": 2.451,
+          "img": "elements/cut/fireball.png",
+          "text": "",
+          "x": 0.5,
+          "y": 0.16,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 1,
+      "cue": "02.0",
+      "t0": 8.525,
+      "t1": 14.8,
+      "duration": 6.275,
+      "img": "card",
+      "text": "80,000,000|TREES",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": [
+        {
+          "cue": "02.0",
+          "t": 8.475,
+          "img": "count",
+          "text": "80000000|TREES",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "02.11",
+          "t": 13.294,
+          "img": "elements/cut/asteroid.png",
+          "text": "",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": true
+        }
+      ]
+    },
+    {
+      "scene_idx": 2,
+      "cue": "03.0",
+      "t0": 14.8,
+      "t1": 19.225,
+      "duration": 4.425,
+      "img": "img/s03.jpg",
+      "text": "WHAT HIT?",
+      "pos": "",
+      "extra": "parallax:push",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 3,
+      "cue": "04.0",
+      "t0": 19.225,
+      "t1": 25.875,
+      "duration": 6.65,
+      "img": "card",
+      "text": "THE TUNGUSKA|EVENT",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": []
+    },
+    {
+      "scene_idx": 4,
+      "cue": "05.0",
+      "t0": 25.875,
+      "t1": 32.375,
+      "duration": 6.5,
+      "img": "img/s05.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:driftR",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "05.12",
+          "t": 31.313,
+          "img": "elements/cut/reindeer.png",
+          "text": "",
+          "x": 0.1958,
+          "y": 0.78,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 5,
+      "cue": "06.0",
+      "t0": 32.375,
+      "t1": 39.525,
+      "duration": 7.15,
+      "img": "img/s06.jpg",
+      "text": "TUNGUSKA RIVER",
+      "pos": "",
+      "extra": "parallax:off",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": []
+    },
+    {
+      "scene_idx": 6,
+      "cue": "07.0",
+      "t0": 39.525,
+      "t1": 44.5,
+      "duration": 4.975,
+      "img": "img/s07.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": [
+        {
+          "cue": "07.2",
+          "t": 40.024,
+          "img": "elements/cut/clock_0717.png",
+          "text": "",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 7,
+      "cue": "08.0",
+      "t0": 44.5,
+      "t1": 48.6,
+      "duration": 4.1,
+      "img": "img/s08.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:punch@\"brighter\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "08.6",
+          "t": 46.604,
+          "img": "elements/cut/fireball.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 8,
+      "cue": "09.0",
+      "t0": 48.6,
+      "t1": 53.9,
+      "duration": 5.3,
+      "img": "img/s09.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 9,
+      "cue": "10.0",
+      "t0": 53.9,
+      "t1": 58.4,
+      "duration": 4.5,
+      "img": "img/s10.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "10.1",
+          "t": 53.927,
+          "img": "elements/cut/shockwave_ring.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 10,
+      "cue": "11.0",
+      "t0": 58.4,
+      "t1": 65.925,
+      "duration": 7.525,
+      "img": "img/s11.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "11.4",
+          "t": 60.058,
+          "img": "elements/cut/trader.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "11.0",
+          "t": 58.35,
+          "img": "peek:bl:curious",
+          "text": "",
+          "x": 0.14,
+          "y": 0.76,
+          "h": 0.3,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 11,
+      "cue": "12.0",
+      "t0": 65.925,
+      "t1": 71.65,
+      "duration": 5.725,
+      "img": "img/s12.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "12.3",
+          "t": 67.564,
+          "img": "elements/cut/shattered_window.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 12,
+      "cue": "13.0",
+      "t0": 71.65,
+      "t1": 78.4,
+      "duration": 6.75,
+      "img": "card",
+      "text": "15|MEGATONS",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": [
+        {
+          "cue": "13.6",
+          "t": 74.354,
+          "img": "count",
+          "text": "15|MEGATONS",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "13.10",
+          "t": 76.218,
+          "img": "elements/cut/shockwave_ring.png",
+          "text": "",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    }
+  ],
+  "stickers": false
+}

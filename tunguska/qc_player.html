@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StickmanHybrid QC Studio — TUNGUSKA</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 10px;
+        }
+        h1 { font-size: 20px; color: #58a6ff; font-weight: 600; }
+        .badge { background: #238636; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
+        
+        #viewport {
+            flex: 1;
+            background: #000;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        #scene-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease-out;
+        }
+        #caption-overlay {
+            position: absolute;
+            bottom: 30px;
+            left: 5%;
+            right: 5%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.8);
+            background: rgba(13, 17, 23, 0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+        .active-word { color: #ffd33d; transform: scale(1.1); display: inline-block; }
+        
+        #meta-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.75);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            border: 1px solid #30363d;
+        }
+        .tag { color: #79c0ff; font-weight: 600; }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #161b22;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        #timeline-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        #scrubber {
+            flex: 1;
+            cursor: pointer;
+            accent-color: #58a6ff;
+        }
+        .btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn:hover { background: #30363d; color: white; }
+        .btn.active { background: #238636; border-color: #2ea043; color: white; }
+        
+        #sidebar {
+            width: 380px;
+            background: #161b22;
+            border-left: 1px solid #30363d;
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #30363d;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+        #scene-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .scene-card {
+            display: flex;
+            gap: 10px;
+            padding: 8px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .scene-card:hover { border-color: #58a6ff; }
+        .scene-card.active { border-color: #238636; background: #16241b; }
+        .scene-thumb {
+            width: 90px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #21262d;
+        }
+        .scene-info {
+            flex: 1;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 3px;
+        }
+        .scene-num { font-weight: 700; color: #58a6ff; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <header>
+            <h1>🎬 StickmanHybrid QC Studio: <span style="color:#fff">TUNGUSKA</span></h1>
+            <div>
+                <span class="badge">56 SCENES</span>
+                <span class="badge" style="background:#1f6feb">5m 22s</span>
+            </div>
+        </header>
+
+        <div id="viewport">
+            <img id="scene-img" src="" alt="Scene View">
+            <div id="meta-overlay">
+                <div>Scene: <span class="tag" id="meta-idx">-</span> | Cue: <span class="tag" id="meta-cue">-</span></div>
+                <div>Move: <span class="tag" id="meta-move">-</span> | Duration: <span class="tag" id="meta-dur">-</span></div>
+            </div>
+            <div id="caption-overlay">Loading captions...</div>
+        </div>
+
+        <div id="controls">
+            <div id="timeline-container">
+                <button class="btn" id="play-btn">▶ Play</button>
+                <span id="time-display" style="font-family: monospace; font-size: 13px;">00:00 / 00:00</span>
+                <input type="range" id="scrubber" min="0" max="322.45" step="0.1" value="0">
+                <audio id="audio-player" src="mix.wav" preload="auto"></audio>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar">
+        <div id="sidebar-header">
+            <span>Scenes Directory (56)</span>
+            <span style="font-size: 12px; color: #8b949e;">Click to Jump</span>
+        </div>
+        <div id="scene-list"></div>
+    </div>
+
+    <script>
+        const scenes = [{"idx": 1, "cue": "01.0", "t0": 0.0, "t1": 8.525, "duration": 8.53, "img": "img/clean/s01.png", "move": "pull", "text": "", "overlays": ["elements/cut/fireball.png"]}, {"idx": 2, "cue": "02.0", "t0": 8.525, "t1": 14.8, "duration": 6.28, "img": "img/card.jpg", "move": "static", "text": "80,000,000|TREES", "overlays": ["count", "elements/cut/asteroid.png"]}, {"idx": 3, "cue": "03.0", "t0": 14.8, "t1": 19.225, "duration": 4.42, "img": "img/clean/s03.png", "move": "push", "text": "WHAT HIT?", "overlays": []}, {"idx": 4, "cue": "04.0", "t0": 19.225, "t1": 25.875, "duration": 6.65, "img": "img/clean/s04.png", "move": "static", "text": "", "overlays": []}, {"idx": 5, "cue": "05.0", "t0": 25.875, "t1": 32.375, "duration": 6.5, "img": "img/clean/s05.png", "move": "driftR", "text": "", "overlays": ["elements/cut/reindeer.png"]}, {"idx": 6, "cue": "06.0", "t0": 32.375, "t1": 39.525, "duration": 7.15, "img": "img/clean/s06.png", "move": "static", "text": "TUNGUSKA RIVER", "overlays": []}, {"idx": 7, "cue": "07.0", "t0": 39.525, "t1": 44.5, "duration": 4.97, "img": "img/clean/s07.png", "move": "orbit", "text": "", "overlays": ["elements/cut/clock_0717.png"]}, {"idx": 8, "cue": "08.0", "t0": 44.5, "t1": 48.6, "duration": 4.1, "img": "img/clean/s08.png", "move": "pull", "text": "", "overlays": ["elements/cut/fireball.png"]}, {"idx": 9, "cue": "09.0", "t0": 48.6, "t1": 53.9, "duration": 5.3, "img": "img/clean/s09.png", "move": "push", "text": "", "overlays": []}, {"idx": 10, "cue": "10.0", "t0": 53.9, "t1": 58.4, "duration": 4.5, "img": "img/clean/s10.png", "move": "driftR", "text": "", "overlays": ["elements/cut/shockwave_ring.png"]}, {"idx": 11, "cue": "11.0", "t0": 58.4, "t1": 65.925, "duration": 7.53, "img": "img/clean/s11.png", "move": "driftL", "text": "", "overlays": ["elements/cut/trader.png", "peek:bl:curious"]}, {"idx": 12, "cue": "12.0", "t0": 65.925, "t1": 71.65, "duration": 5.72, "img": "img/clean/s12.png", "move": "pull", "text": "", "overlays": ["elements/cut/shattered_window.png"]}, {"idx": 13, "cue": "13.0", "t0": 71.65, "t1": 78.4, "duration": 6.75, "img": "img/card.jpg", "move": "static", "text": "15|MEGATONS", "overlays": ["count", "elements/cut/shockwave_ring.png"]}, {"idx": 14, "cue": "14.0", "t0": 78.4, "t1": 83.7, "duration": 5.3, "img": "img/clean/s14.png", "move": "pull", "text": "", "overlays": []}, {"idx": 15, "cue": "15.0", "t0": 83.7, "t1": 90.525, "duration": 6.83, "img": "img/clean/s15.png", "move": "push", "text": "", "overlays": ["elements/cut/seismograph.png"]}, {"idx": 16, "cue": "16.0", "t0": 90.525, "t1": 97.375, "duration": 6.85, "img": "img/clean/s16.png", "move": "driftL", "text": "LONDON, 1908", "overlays": ["elements/cut/londoner_newspaper.png"]}, {"idx": 17, "cue": "17.0", "t0": 97.375, "t1": 101.2, "duration": 3.83, "img": "img/clean/s17.png", "move": "pull", "text": "", "overlays": []}, {"idx": 18, "cue": "18.0", "t0": 101.2, "t1": 105.0, "duration": 3.8, "img": "img/clean/s18.png", "move": "orbit", "text": "", "overlays": []}, {"idx": 19, "cue": "19.0", "t0": 105.0, "t1": 111.425, "duration": 6.42, "img": "img/clean/s19.png", "move": "pull", "text": "1914 - 1927", "overlays": ["count"]}, {"idx": 20, "cue": "20.0", "t0": 111.425, "t1": 118.975, "duration": 7.55, "img": "img/clean/s20.png", "move": "orbit", "text": "LEONID KULIK", "overlays": ["elements/cut/kulik.png"]}, {"idx": 21, "cue": "21.0", "t0": 118.975, "t1": 124.7, "duration": 5.72, "img": "img/clean/s21.png", "move": "push", "text": "", "overlays": ["elements/cut/tent.png"]}, {"idx": 22, "cue": "22.0", "t0": 124.7, "t1": 128.075, "duration": 3.38, "img": "img/clean/s22.png", "move": "pull", "text": "", "overlays": ["peek:bl:thinking"]}, {"idx": 23, "cue": "23.0", "t0": 128.075, "t1": 131.125, "duration": 3.05, "img": "img/clean/s23.png", "move": "pull", "text": "", "overlays": []}, {"idx": 24, "cue": "24.0", "t0": 131.125, "t1": 138.2, "duration": 7.08, "img": "img/clean/s24.png", "move": "orbit", "text": "ALL POINTING OUTWARD", "overlays": []}, {"idx": 25, "cue": "25.0", "t0": 138.2, "t1": 144.175, "duration": 5.97, "img": "img/clean/s25.png", "move": "push", "text": "", "overlays": ["elements/cut/tree_pole.png"]}, {"idx": 26, "cue": "26.0", "t0": 144.175, "t1": 149.8, "duration": 5.62, "img": "img/clean/s26.png", "move": "orbit", "text": "", "overlays": ["elements/cut/cracked_ground.png"]}, {"idx": 27, "cue": "27.0", "t0": 149.8, "t1": 155.325, "duration": 5.53, "img": "img/clean/s27.png", "move": "pull", "text": "", "overlays": ["elements/cut/city_skyline.png"]}, {"idx": 28, "cue": "28.0", "t0": 155.325, "t1": 158.025, "duration": 2.7, "img": "img/card.jpg", "move": "static", "text": "SO WHAT DID THIS?", "overlays": ["elements/cut/big_qmark.png"]}, {"idx": 29, "cue": "29.0", "t0": 158.025, "t1": 163.55, "duration": 5.53, "img": "img/clean/s29.png", "move": "driftL", "text": "THEORY 1: COMET", "overlays": ["elements/cut/comet.png"]}, {"idx": 30, "cue": "30.0", "t0": 163.55, "t1": 170.7, "duration": 7.15, "img": "img/clean/s30.png", "move": "driftR", "text": "THEORY 2: LAKE CHEKO", "overlays": ["elements/cut/lake.png"]}, {"idx": 31, "cue": "31.0", "t0": 170.7, "t1": 177.375, "duration": 6.67, "img": "img/clean/s31.png", "move": "driftL", "text": "THEORY 3: ANTIMATTER", "overlays": ["elements/cut/atom_flask.png", "elements/cut/blackhole.png"]}, {"idx": 32, "cue": "32.0", "t0": 177.375, "t1": 183.275, "duration": 5.9, "img": "img/clean/s32.png", "move": "push", "text": "THEORY 4: TESLA", "overlays": ["elements/cut/tesla.png"]}, {"idx": 33, "cue": "33.0", "t0": 183.275, "t1": 192.475, "duration": 9.2, "img": "img/clean/s33.png", "move": "push", "text": "THEORY 5: SPACESHIP", "overlays": ["elements/cut/alien_stickman.png", "peek:left-edge:shocked"]}, {"idx": 34, "cue": "34.0", "t0": 192.475, "t1": 197.275, "duration": 4.8, "img": "img/clean/s34.png", "move": "static", "text": "", "overlays": []}, {"idx": 35, "cue": "35.0", "t0": 197.275, "t1": 202.45, "duration": 5.17, "img": "img/card.jpg", "move": "static", "text": "DOZENS OF THEORIES.|ZERO ANSWERS.", "overlays": []}, {"idx": 36, "cue": "36.0", "t0": 202.45, "t1": 210.625, "duration": 8.18, "img": "img/clean/s36.png", "move": "driftL", "text": "1960s RESEARCH", "overlays": ["elements/cut/microscope.png", "elements/cut/glass_spheres.png"]}, {"idx": 37, "cue": "37.0", "t0": 210.625, "t1": 213.775, "duration": 3.15, "img": "img/clean/s37.png", "move": "pull", "text": "", "overlays": []}, {"idx": 38, "cue": "38.0", "t0": 213.775, "t1": 218.05, "duration": 4.28, "img": "img/clean/s38.png", "move": "push", "text": "", "overlays": []}, {"idx": 39, "cue": "39.0", "t0": 218.05, "t1": 222.375, "duration": 4.33, "img": "img/clean/s39.png", "move": "orbit", "text": "FROM STRAIGHT ABOVE", "overlays": []}, {"idx": 40, "cue": "40.0", "t0": 222.375, "t1": 227.075, "duration": 4.7, "img": "img/card.jpg", "move": "static", "text": "AN EXPLOSION|IN MID-AIR", "overlays": []}, {"idx": 41, "cue": "41.0", "t0": 227.075, "t1": 236.525, "duration": 9.45, "img": "img/clean/s41.png", "move": "push", "text": "", "overlays": ["elements/cut/asteroid.png", "count"]}, {"idx": 42, "cue": "42.0", "t0": 236.525, "t1": 242.6, "duration": 6.08, "img": "img/clean/s42.png", "move": "pull", "text": "", "overlays": ["elements/cut/fireball.png"]}, {"idx": 43, "cue": "43.0", "t0": 242.6, "t1": 249.075, "duration": 6.47, "img": "img/clean/s43.png", "move": "driftR", "text": "", "overlays": ["peek:left-edge:thinking"]}, {"idx": 44, "cue": "44.0", "t0": 249.075, "t1": 254.825, "duration": 5.75, "img": "img/clean/s44.png", "move": "orbit", "text": "", "overlays": []}, {"idx": 45, "cue": "45.0", "t0": 254.825, "t1": 257.4, "duration": 2.58, "img": "img/card.jpg", "move": "static", "text": "CASE CLOSED?|NOT QUITE.", "overlays": []}, {"idx": 46, "cue": "46.0", "t0": 257.4, "t1": 265.575, "duration": 8.18, "img": "img/clean/s46.png", "move": "pull", "text": "CHELYABINSK 2013", "overlays": ["elements/cut/shattered_window.png", "count"]}, {"idx": 47, "cue": "47.0", "t0": 265.575, "t1": 272.65, "duration": 7.08, "img": "img/clean/s47.png", "move": "pull", "text": "", "overlays": ["count"]}, {"idx": 48, "cue": "48.0", "t0": 272.65, "t1": 276.075, "duration": 3.42, "img": "img/clean/s48.png", "move": "driftL", "text": "", "overlays": ["elements/cut/asteroid.png"]}, {"idx": 49, "cue": "49.0", "t0": 276.075, "t1": 282.225, "duration": 6.15, "img": "img/clean/s49.png", "move": "pull", "text": "", "overlays": ["elements/cut/clock_0717.png"]}, {"idx": 50, "cue": "50.0", "t0": 282.225, "t1": 287.65, "duration": 5.42, "img": "img/clean/s50.png", "move": "driftR", "text": "", "overlays": []}, {"idx": 51, "cue": "51.0", "t0": 287.65, "t1": 295.075, "duration": 7.42, "img": "img/clean/s51.png", "move": "push", "text": "", "overlays": ["peek:bl:shocked"]}, {"idx": 52, "cue": "52.0", "t0": 295.075, "t1": 298.85, "duration": 3.77, "img": "img/clean/s52.png", "move": "driftR", "text": "2,000 SQ KM", "overlays": ["elements/cut/city_skyline.png"]}, {"idx": 53, "cue": "53.0", "t0": 298.85, "t1": 307.825, "duration": 8.97, "img": "img/clean/s53.png", "move": "driftL", "text": "", "overlays": ["elements/cut/telescope.png"]}, {"idx": 54, "cue": "54.0", "t0": 307.825, "t1": 311.8, "duration": 3.98, "img": "img/clean/s54.png", "move": "driftR", "text": "", "overlays": []}, {"idx": 55, "cue": "55.0", "t0": 311.8, "t1": 317.725, "duration": 5.92, "img": "img/card.jpg", "move": "static", "text": "WHAT HIT SIBERIA?|A: ASTEROID   B: COMET", "overlays": ["peek:left-edge:pointing"]}, {"idx": 56, "cue": "56.0", "t0": 317.725, "t1": 322.45, "duration": 4.72, "img": "img/clean/s56.png", "move": "orbit", "text": "", "overlays": []}];
+        const words = [{"word": "June", "start": 0.0, "end": 0.385}, {"word": "thirtieth,", "start": 0.385, "end": 1.25}, {"word": "1908.", "start": 1.25, "end": 1.635}, {"word": "Siberia.", "start": 1.635, "end": 2.308}, {"word": "In", "start": 2.308, "end": 2.501}, {"word": "seconds,", "start": 2.501, "end": 3.174}, {"word": "eighty", "start": 3.174, "end": 3.751}, {"word": "million", "start": 3.751, "end": 4.424}, {"word": "trees", "start": 4.424, "end": 4.905}, {"word": "fall", "start": 4.905, "end": 5.29}, {"word": "flat,", "start": 5.29, "end": 5.674}, {"word": "and", "start": 5.674, "end": 5.963}, {"word": "nobody", "start": 5.963, "end": 6.54}, {"word": "can", "start": 6.54, "end": 6.829}, {"word": "say", "start": 6.829, "end": 7.117}, {"word": "what", "start": 7.117, "end": 7.502}, {"word": "hit", "start": 7.502, "end": 7.79}, {"word": "them.", "start": 7.79, "end": 8.175}, {"word": "Eighty", "start": 8.525, "end": 8.999}, {"word": "million", "start": 8.999, "end": 9.552}, {"word": "trees.", "start": 9.552, "end": 9.947}, {"word": "Flattened", "start": 9.947, "end": 10.658}, {"word": "like", "start": 10.658, "end": 10.974}, {"word": "matchsticks.", "start": 10.974, "end": 11.843}, {"word": "And", "start": 11.843, "end": 12.08}, {"word": "there's", "start": 12.08, "end": 12.554}, {"word": "no", "start": 12.554, "end": 12.712}, {"word": "crater.", "start": 12.712, "end": 13.186}, {"word": "No", "start": 13.186, "end": 13.344}, {"word": "rock.", "start": 13.344, "end": 13.66}, {"word": "No", "start": 13.66, "end": 13.818}, {"word": "wreckage.", "start": 13.818, "end": 14.45}, {"word": "So", "start": 14.8, "end": 14.951}, {"word": "what", "start": 14.951, "end": 15.253}, {"word": "hit", "start": 15.253, "end": 15.479}, {"word": "Earth", "start": 15.479, "end": 15.856}, {"word": "that", "start": 15.856, "end": 16.158}, {"word": "morning,", "start": 16.158, "end": 16.687}, {"word": "and", "start": 16.687, "end": 16.913}, {"word": "why", "start": 16.913, "end": 17.139}, {"word": "did", "start": 17.139, "end": 17.366}, {"word": "it", "start": 17.366, "end": 17.517}, {"word": "leave", "start": 17.517, "end": 17.894}, {"word": "nothing", "start": 17.894, "end": 18.422}, {"word": "behind?", "start": 18.422, "end": 18.875}, {"word": "This", "start": 19.225, "end": 19.559}, {"word": "is", "start": 19.559, "end": 19.726}, {"word": "the", "start": 19.726, "end": 19.977}, {"word": "Tunguska", "start": 19.977, "end": 20.646}, {"word": "event,", "start": 20.646, "end": 21.064}, {"word": "and", "start": 21.064, "end": 21.314}, {"word": "a", "start": 21.314, "end": 21.398}, {"word": "century", "start": 21.398, "end": 21.983}, {"word": "later,", "start": 21.983, "end": 22.401}, {"word": "scientists", "start": 22.401, "end": 23.236}, {"word": "are", "start": 23.236, "end": 23.487}, {"word": "still", "start": 23.487, "end": 23.905}, {"word": "arguing", "start": 23.905, "end": 24.49}, {"word": "about", "start": 24.49, "end": 24.908}, {"word": "it.", "start": 24.908, "end": 25.075}, {"word": "Central", "start": 25.875, "end": 26.537}, {"word": "Siberia", "start": 26.537, "end": 27.2}, {"word": "was", "start": 27.2, "end": 27.483}, {"word": "almost", "start": 27.483, "end": 28.051}, {"word": "empty.", "start": 28.051, "end": 28.524}, {"word": "Pine", "start": 28.524, "end": 28.903}, {"word": "forest,", "start": 28.903, "end": 29.47}, {"word": "swamp,", "start": 29.47, "end": 29.943}, {"word": "and", "start": 29.943, "end": 30.227}, {"word": "a", "start": 30.227, "end": 30.322}, {"word": "few", "start": 30.322, "end": 30.606}, {"word": "reindeer", "start": 30.606, "end": 31.363}, {"word": "herders.", "start": 31.363, "end": 32.025}, {"word": "The", "start": 32.375, "end": 32.618}, {"word": "Podkamennaya", "start": 32.618, "end": 33.589}, {"word": "Tunguska", "start": 33.589, "end": 34.237}, {"word": "River,", "start": 34.237, "end": 34.642}, {"word": "thousands", "start": 34.642, "end": 35.37}, {"word": "of", "start": 35.37, "end": 35.532}, {"word": "kilometers", "start": 35.532, "end": 36.342}, {"word": "from", "start": 36.342, "end": 36.665}, {"word": "Moscow,", "start": 36.665, "end": 37.151}, {"word": "and", "start": 37.151, "end": 37.394}, {"word": "from", "start": 37.394, "end": 37.718}, {"word": "anyone", "start": 37.718, "end": 38.204}, {"word": "who", "start": 38.204, "end": 38.446}, {"word": "could", "start": 38.446, "end": 38.851}, {"word": "help.", "start": 38.851, "end": 39.175}, {"word": "At", "start": 39.525, "end": 39.682}, {"word": "about", "start": 39.682, "end": 40.074}, {"word": "seven-fifteen,", "start": 40.074, "end": 41.014}, {"word": "a", "start": 41.014, "end": 41.093}, {"word": "herder", "start": 41.093, "end": 41.563}, {"word": "looked", "start": 41.563, "end": 42.033}, {"word": "up", "start": 42.033, "end": 42.19}, {"word": "and", "start": 42.19, "end": 42.425}, {"word": "watched", "start": 42.425, "end": 42.974}, {"word": "the", "start": 42.974, "end": 43.209}, {"word": "sky", "start": 43.209, "end": 43.444}, {"word": "turn", "start": 43.444, "end": 43.758}, {"word": "white.", "start": 43.758, "end": 44.15}, {"word": "A", "start": 44.5, "end": 44.58}, {"word": "fireball,", "start": 44.58, "end": 45.218}, {"word": "brighter", "start": 45.218, "end": 45.856}, {"word": "than", "start": 45.856, "end": 46.176}, {"word": "the", "start": 46.176, "end": 46.415}, {"word": "sun,", "start": 46.415, "end": 46.654}, {"word": "streaked", "start": 46.654, "end": 47.293}, {"word": "across", "start": 47.293, "end": 47.771}, {"word": "the", "start": 47.771, "end": 48.011}, {"word": "sky.", "start": 48.011, "end": 48.25}, {"word": "Then", "start": 48.6, "end": 48.936}, {"word": "it", "start": 48.936, "end": 49.104}, {"word": "vanished.", "start": 49.104, "end": 49.775}, {"word": "And", "start": 49.775, "end": 50.027}, {"word": "seconds", "start": 50.027, "end": 50.614}, {"word": "later,", "start": 50.614, "end": 51.034}, {"word": "the", "start": 51.034, "end": 51.286}, {"word": "sky", "start": 51.286, "end": 51.538}, {"word": "itself", "start": 51.538, "end": 52.041}, {"word": "seemed", "start": 52.041, "end": 52.545}, {"word": "to", "start": 52.545, "end": 52.713}, {"word": "explode.", "start": 52.713, "end": 53.3}, {"word": "A", "start": 53.9, "end": 53.977}, {"word": "shockwave", "start": 53.977, "end": 54.669}, {"word": "tore", "start": 54.669, "end": 54.976}, {"word": "through", "start": 54.976, "end": 55.514}, {"word": "the", "start": 55.514, "end": 55.744}, {"word": "forest,", "start": 55.744, "end": 56.206}, {"word": "and", "start": 56.206, "end": 56.436}, {"word": "tree", "start": 56.436, "end": 56.744}, {"word": "after", "start": 56.744, "end": 57.128}, {"word": "tree", "start": 57.128, "end": 57.435}, {"word": "went", "start": 57.435, "end": 57.743}, {"word": "down.", "start": 57.743, "end": 58.05}, {"word": "Sixty", "start": 58.4, "end": 58.827}, {"word": "kilometers", "start": 58.827, "end": 59.681}, {"word": "away,", "start": 59.681, "end": 60.023}, {"word": "a", "start": 60.023, "end": 60.108}, {"word": "trader", "start": 60.108, "end": 60.621}, {"word": "said", "start": 60.621, "end": 60.963}, {"word": "his", "start": 60.963, "end": 61.219}, {"word": "shirt", "start": 61.219, "end": 61.646}, {"word": "felt", "start": 61.646, "end": 61.988}, {"word": "like", "start": 61.988, "end": 62.329}, {"word": "it", "start": 62.329, "end": 62.5}, {"word": "was", "start": 62.5, "end": 62.756}, {"word": "on", "start": 62.756, "end": 62.927}, {"word": "fire.", "start": 62.927, "end": 63.269}, {"word": "The", "start": 63.269, "end": 63.525}, {"word": "blast", "start": 63.525, "end": 63.952}, {"word": "threw", "start": 63.952, "end": 64.379}, {"word": "him", "start": 64.379, "end": 64.635}, {"word": "off", "start": 64.635, "end": 64.892}, {"word": "his", "start": 64.892, "end": 65.148}, {"word": "porch.", "start": 65.148, "end": 65.575}, {"word": "Horses", "start": 65.925, "end": 66.386}, {"word": "collapsed.", "start": 66.386, "end": 67.077}, {"word": "Windows", "start": 67.077, "end": 67.614}, {"word": "shattered.", "start": 67.614, "end": 68.305}, {"word": "People", "start": 68.305, "end": 68.766}, {"word": "felt", "start": 68.766, "end": 69.073}, {"word": "the", "start": 69.073, "end": 69.304}, {"word": "ground", "start": 69.304, "end": 69.764}, {"word": "roll", "start": 69.764, "end": 70.071}, {"word": "beneath", "start": 70.071, "end": 70.609}, {"word": "their", "start": 70.609, "end": 70.993}, {"word": "feet.", "start": 70.993, "end": 71.3}, {"word": "Scientists", "start": 71.65, "end": 72.46}, {"word": "estimate", "start": 72.46, "end": 73.108}, {"word": "the", "start": 73.108, "end": 73.351}, {"word": "blast", "start": 73.351, "end": 73.756}, {"word": "at", "start": 73.756, "end": 73.918}, {"word": "around", "start": 73.918, "end": 74.404}, {"word": "fifteen", "start": 74.404, "end": 74.972}, {"word": "megatons,", "start": 74.972, "end": 75.62}, {"word": "roughly", "start": 75.62, "end": 76.187}, {"word": "a", "start": 76.187, "end": 76.268}, {"word": "thousand", "start": 76.268, "end": 76.916}, {"word": "Hiroshima", "start": 76.916, "end": 77.645}, {"word": "bombs.", "start": 77.645, "end": 78.05}, {"word": "And", "start": 78.4, "end": 78.625}, {"word": "it", "start": 78.625, "end": 78.775}, {"word": "happened", "start": 78.775, "end": 79.375}, {"word": "in", "start": 79.375, "end": 79.525}, {"word": "the", "start": 79.525, "end": 79.75}, {"word": "middle", "start": 79.75, "end": 80.2}, {"word": "of", "start": 80.2, "end": 80.35}, {"word": "nowhere,", "start": 80.35, "end": 80.875}, {"word": "which", "start": 80.875, "end": 81.25}, {"word": "is", "start": 81.25, "end": 81.4}, {"word": "exactly", "start": 81.4, "end": 81.925}, {"word": "why", "start": 81.925, "end": 82.15}, {"word": "nobody", "start": 82.15, "end": 82.6}, {"word": "went", "start": 82.6, "end": 82.9}, {"word": "to", "start": 82.9, "end": 83.05}, {"word": "look.", "start": 83.05, "end": 83.35}, {"word": "But", "start": 83.7, "end": 83.934}, {"word": "the", "start": 83.934, "end": 84.168}, {"word": "world", "start": 84.168, "end": 84.558}, {"word": "noticed.", "start": 84.558, "end": 85.104}, {"word": "Instruments", "start": 85.104, "end": 85.962}, {"word": "in", "start": 85.962, "end": 86.118}, {"word": "Britain", "start": 86.118, "end": 86.664}, {"word": "recorded", "start": 86.664, "end": 87.289}, {"word": "a", "start": 87.289, "end": 87.367}, {"word": "pressure", "start": 87.367, "end": 87.991}, {"word": "wave", "start": 87.991, "end": 88.303}, {"word": "that", "start": 88.303, "end": 88.615}, {"word": "circled", "start": 88.615, "end": 89.161}, {"word": "the", "start": 89.161, "end": 89.395}, {"word": "globe,", "start": 89.395, "end": 89.785}, {"word": "twice.", "start": 89.785, "end": 90.175}, {"word": "For", "start": 90.525, "end": 90.772}, {"word": "days,", "start": 90.772, "end": 91.101}, {"word": "nights", "start": 91.101, "end": 91.595}, {"word": "across", "start": 91.595, "end": 92.088}, {"word": "Europe", "start": 92.088, "end": 92.582}, {"word": "glowed.", "start": 92.582, "end": 93.076}, {"word": "In", "start": 93.076, "end": 93.24}, {"word": "London,", "start": 93.24, "end": 93.734}, {"word": "people", "start": 93.734, "end": 94.228}, {"word": "reportedly", "start": 94.228, "end": 95.05}, {"word": "read", "start": 95.05, "end": 95.379}, {"word": "newspapers", "start": 95.379, "end": 96.202}, {"word": "at", "start": 96.202, "end": 96.367}, {"word": "midnight.", "start": 96.367, "end": 97.025}, {"word": "People", "start": 97.375, "end": 97.838}, {"word": "looked", "start": 97.838, "end": 98.302}, {"word": "up", "start": 98.302, "end": 98.456}, {"word": "and", "start": 98.456, "end": 98.688}, {"word": "asked", "start": 98.688, "end": 99.074}, {"word": "the", "start": 99.074, "end": 99.306}, {"word": "same", "start": 99.306, "end": 99.614}, {"word": "thing:", "start": 99.614, "end": 100.001}, {"word": "what", "start": 100.001, "end": 100.309}, {"word": "was", "start": 100.309, "end": 100.541}, {"word": "that?", "start": 100.541, "end": 100.85}, {"word": "Nobody", "start": 101.2, "end": 101.731}, {"word": "could", "start": 101.731, "end": 102.173}, {"word": "answer.", "start": 102.173, "end": 102.704}, {"word": "And", "start": 102.704, "end": 102.969}, {"word": "nobody", "start": 102.969, "end": 103.5}, {"word": "went", "start": 103.5, "end": 103.854}, {"word": "to", "start": 103.854, "end": 104.031}, {"word": "find", "start": 104.031, "end": 104.385}, {"word": "out.", "start": 104.385, "end": 104.65}, {"word": "Russia", "start": 105.0, "end": 105.521}, {"word": "was", "start": 105.521, "end": 105.781}, {"word": "busy", "start": 105.781, "end": 106.128}, {"word": "with", "start": 106.128, "end": 106.475}, {"word": "wars", "start": 106.475, "end": 106.822}, {"word": "and", "start": 106.822, "end": 107.083}, {"word": "a", "start": 107.083, "end": 107.17}, {"word": "revolution.", "start": 107.17, "end": 108.037}, {"word": "For", "start": 108.037, "end": 108.298}, {"word": "nineteen", "start": 108.298, "end": 108.992}, {"word": "years,", "start": 108.992, "end": 109.426}, {"word": "the", "start": 109.426, "end": 109.686}, {"word": "site", "start": 109.686, "end": 110.034}, {"word": "sat", "start": 110.034, "end": 110.294}, {"word": "untouched.", "start": 110.294, "end": 111.075}, {"word": "Until", "start": 111.425, "end": 111.918}, {"word": "1927.", "start": 111.918, "end": 112.313}, {"word": "A", "start": 112.313, "end": 112.411}, {"word": "Russian", "start": 112.411, "end": 113.102}, {"word": "mineral", "start": 113.102, "end": 113.792}, {"word": "expert", "start": 113.792, "end": 114.384}, {"word": "named", "start": 114.384, "end": 114.877}, {"word": "Leonid", "start": 114.877, "end": 115.469}, {"word": "Kulik", "start": 115.469, "end": 115.962}, {"word": "was", "start": 115.962, "end": 116.258}, {"word": "sure", "start": 116.258, "end": 116.652}, {"word": "it", "start": 116.652, "end": 116.85}, {"word": "was", "start": 116.85, "end": 117.146}, {"word": "a", "start": 117.146, "end": 117.244}, {"word": "giant", "start": 117.244, "end": 117.737}, {"word": "meteorite.", "start": 117.737, "end": 118.625}, {"word": "He", "start": 118.975, "end": 119.122}, {"word": "trekked", "start": 119.122, "end": 119.638}, {"word": "for", "start": 119.638, "end": 119.859}, {"word": "weeks", "start": 119.859, "end": 120.227}, {"word": "through", "start": 120.227, "end": 120.742}, {"word": "swamp", "start": 120.742, "end": 121.11}, {"word": "and", "start": 121.11, "end": 121.331}, {"word": "storm.", "start": 121.331, "end": 121.699}, {"word": "His", "start": 121.699, "end": 121.92}, {"word": "own", "start": 121.92, "end": 122.141}, {"word": "guides", "start": 122.141, "end": 122.583}, {"word": "were", "start": 122.583, "end": 122.877}, {"word": "afraid", "start": 122.877, "end": 123.319}, {"word": "to", "start": 123.319, "end": 123.466}, {"word": "enter", "start": 123.466, "end": 123.835}, {"word": "the", "start": 123.835, "end": 124.055}, {"word": "zone.", "start": 124.055, "end": 124.35}, {"word": "He", "start": 124.7, "end": 124.889}, {"word": "expected", "start": 124.889, "end": 125.645}, {"word": "a", "start": 125.645, "end": 125.74}, {"word": "crater", "start": 125.74, "end": 126.307}, {"word": "as", "start": 126.307, "end": 126.496}, {"word": "big", "start": 126.496, "end": 126.78}, {"word": "as", "start": 126.78, "end": 126.969}, {"word": "a", "start": 126.969, "end": 127.063}, {"word": "stadium.", "start": 127.063, "end": 127.725}, {"word": "What", "start": 128.075, "end": 128.435}, {"word": "he", "start": 128.435, "end": 128.615}, {"word": "found", "start": 128.615, "end": 129.065}, {"word": "was", "start": 129.065, "end": 129.335}, {"word": "far", "start": 129.335, "end": 129.605}, {"word": "stranger.", "start": 129.605, "end": 130.325}, {"word": "Millions", "start": 131.125, "end": 131.833}, {"word": "of", "start": 131.833, "end": 132.01}, {"word": "trees,", "start": 132.01, "end": 132.452}, {"word": "lying", "start": 132.452, "end": 132.895}, {"word": "flat,", "start": 132.895, "end": 133.249}, {"word": "all", "start": 133.249, "end": 133.514}, {"word": "pointing", "start": 133.514, "end": 134.222}, {"word": "away", "start": 134.222, "end": 134.576}, {"word": "from", "start": 134.576, "end": 134.93}, {"word": "one", "start": 134.93, "end": 135.195}, {"word": "spot,", "start": 135.195, "end": 135.549}, {"word": "like", "start": 135.549, "end": 135.903}, {"word": "a", "start": 135.903, "end": 135.992}, {"word": "giant", "start": 135.992, "end": 136.434}, {"word": "hand", "start": 136.434, "end": 136.788}, {"word": "had", "start": 136.788, "end": 137.054}, {"word": "swept", "start": 137.054, "end": 137.496}, {"word": "them.", "start": 137.496, "end": 137.85}, {"word": "And", "start": 138.2, "end": 138.438}, {"word": "at", "start": 138.438, "end": 138.596}, {"word": "the", "start": 138.596, "end": 138.834}, {"word": "center?", "start": 138.834, "end": 139.309}, {"word": "Trees", "start": 139.309, "end": 139.705}, {"word": "still", "start": 139.705, "end": 140.101}, {"word": "standing,", "start": 140.101, "end": 140.735}, {"word": "stripped", "start": 140.735, "end": 141.369}, {"word": "of", "start": 141.369, "end": 141.527}, {"word": "every", "start": 141.527, "end": 141.924}, {"word": "branch,", "start": 141.924, "end": 142.399}, {"word": "like", "start": 142.399, "end": 142.716}, {"word": "telegraph", "start": 142.716, "end": 143.429}, {"word": "poles.", "start": 143.429, "end": 143.825}, {"word": "No", "start": 144.175, "end": 144.354}, {"word": "crater.", "start": 144.354, "end": 144.89}, {"word": "Kulik", "start": 144.89, "end": 145.337}, {"word": "drained", "start": 145.337, "end": 145.963}, {"word": "swamps", "start": 145.963, "end": 146.5}, {"word": "and", "start": 146.5, "end": 146.768}, {"word": "dug", "start": 146.768, "end": 147.036}, {"word": "for", "start": 147.036, "end": 147.304}, {"word": "years.", "start": 147.304, "end": 147.751}, {"word": "He", "start": 147.751, "end": 147.93}, {"word": "never", "start": 147.93, "end": 148.377}, {"word": "found", "start": 148.377, "end": 148.824}, {"word": "the", "start": 148.824, "end": 149.092}, {"word": "rock.", "start": 149.092, "end": 149.45}, {"word": "Something", "start": 149.8, "end": 150.456}, {"word": "had", "start": 150.456, "end": 150.675}, {"word": "wiped", "start": 150.675, "end": 151.039}, {"word": "out", "start": 151.039, "end": 151.258}, {"word": "an", "start": 151.258, "end": 151.404}, {"word": "area", "start": 151.404, "end": 151.695}, {"word": "bigger", "start": 151.695, "end": 152.132}, {"word": "than", "start": 152.132, "end": 152.424}, {"word": "London,", "start": 152.424, "end": 152.861}, {"word": "without", "start": 152.861, "end": 153.371}, {"word": "leaving", "start": 153.371, "end": 153.882}, {"word": "a", "start": 153.882, "end": 153.955}, {"word": "single", "start": 153.955, "end": 154.392}, {"word": "fragment.", "start": 154.392, "end": 154.975}, {"word": "So", "start": 155.325, "end": 155.587}, {"word": "what", "start": 155.587, "end": 156.11}, {"word": "did", "start": 156.11, "end": 156.502}, {"word": "this?", "start": 156.502, "end": 157.025}, {"word": "Theory", "start": 158.025, "end": 158.551}, {"word": "one:", "start": 158.551, "end": 158.814}, {"word": "a", "start": 158.814, "end": 158.902}, {"word": "comet.", "start": 158.902, "end": 159.341}, {"word": "Ice", "start": 159.341, "end": 159.604}, {"word": "and", "start": 159.604, "end": 159.867}, {"word": "dust", "start": 159.867, "end": 160.218}, {"word": "would", "start": 160.218, "end": 160.656}, {"word": "explode,", "start": 160.656, "end": 161.27}, {"word": "then", "start": 161.27, "end": 161.621}, {"word": "leave", "start": 161.621, "end": 162.06}, {"word": "nothing", "start": 162.06, "end": 162.674}, {"word": "behind.", "start": 162.674, "end": 163.2}, {"word": "Theory", "start": 163.55, "end": 164.073}, {"word": "two:", "start": 164.073, "end": 164.335}, {"word": "a", "start": 164.335, "end": 164.422}, {"word": "lake.", "start": 164.422, "end": 164.771}, {"word": "One", "start": 164.771, "end": 165.032}, {"word": "team", "start": 165.032, "end": 165.381}, {"word": "claimed", "start": 165.381, "end": 165.991}, {"word": "a", "start": 165.991, "end": 166.078}, {"word": "small", "start": 166.078, "end": 166.514}, {"word": "lake", "start": 166.514, "end": 166.863}, {"word": "nearby", "start": 166.863, "end": 167.386}, {"word": "was", "start": 167.386, "end": 167.647}, {"word": "the", "start": 167.647, "end": 167.909}, {"word": "crater.", "start": 167.909, "end": 168.432}, {"word": "Most", "start": 168.432, "end": 168.781}, {"word": "scientists", "start": 168.781, "end": 169.653}, {"word": "disagree.", "start": 169.653, "end": 170.35}, {"word": "Theory", "start": 170.7, "end": 171.227}, {"word": "three:", "start": 171.227, "end": 171.666}, {"word": "antimatter,", "start": 171.666, "end": 172.545}, {"word": "or", "start": 172.545, "end": 172.72}, {"word": "a", "start": 172.72, "end": 172.808}, {"word": "tiny", "start": 172.808, "end": 173.16}, {"word": "black", "start": 173.16, "end": 173.599}, {"word": "hole.", "start": 173.599, "end": 173.95}, {"word": "Exciting", "start": 173.95, "end": 174.653}, {"word": "ideas,", "start": 174.653, "end": 175.092}, {"word": "but", "start": 175.092, "end": 175.356}, {"word": "nothing", "start": 175.356, "end": 175.971}, {"word": "supports", "start": 175.971, "end": 176.674}, {"word": "them.", "start": 176.674, "end": 177.025}, {"word": "Theory", "start": 177.375, "end": 177.887}, {"word": "four:", "start": 177.887, "end": 178.229}, {"word": "Nikola", "start": 178.229, "end": 178.741}, {"word": "Tesla's", "start": 178.741, "end": 179.253}, {"word": "death", "start": 179.253, "end": 179.68}, {"word": "ray.", "start": 179.68, "end": 179.937}, {"word": "The", "start": 179.937, "end": 180.193}, {"word": "internet", "start": 180.193, "end": 180.876}, {"word": "loves", "start": 180.876, "end": 181.303}, {"word": "it.", "start": 181.303, "end": 181.473}, {"word": "There", "start": 181.473, "end": 181.9}, {"word": "is", "start": 181.9, "end": 182.071}, {"word": "no", "start": 182.071, "end": 182.242}, {"word": "evidence.", "start": 182.242, "end": 182.925}, {"word": "Theory", "start": 183.275, "end": 183.834}, {"word": "five:", "start": 183.834, "end": 184.207}, {"word": "aliens.", "start": 184.207, "end": 184.766}, {"word": "That", "start": 184.766, "end": 185.138}, {"word": "one", "start": 185.138, "end": 185.418}, {"word": "started", "start": 185.418, "end": 186.07}, {"word": "in", "start": 186.07, "end": 186.256}, {"word": "1946,", "start": 186.256, "end": 186.629}, {"word": "with", "start": 186.629, "end": 187.001}, {"word": "a", "start": 187.001, "end": 187.094}, {"word": "science-fiction", "start": 187.094, "end": 188.399}, {"word": "story", "start": 188.399, "end": 188.864}, {"word": "about", "start": 188.864, "end": 189.33}, {"word": "a", "start": 189.33, "end": 189.423}, {"word": "spaceship", "start": 189.423, "end": 190.262}, {"word": "exploding", "start": 190.262, "end": 191.1}, {"word": "over", "start": 191.1, "end": 191.473}, {"word": "Siberia.", "start": 191.473, "end": 192.125}, {"word": "Some", "start": 192.475, "end": 192.811}, {"word": "readers", "start": 192.811, "end": 193.399}, {"word": "took", "start": 193.399, "end": 193.734}, {"word": "the", "start": 193.734, "end": 193.986}, {"word": "story", "start": 193.986, "end": 194.406}, {"word": "as", "start": 194.406, "end": 194.574}, {"word": "fact.", "start": 194.574, "end": 194.91}, {"word": "The", "start": 194.91, "end": 195.162}, {"word": "legend", "start": 195.162, "end": 195.666}, {"word": "never", "start": 195.666, "end": 196.085}, {"word": "really", "start": 196.085, "end": 196.589}, {"word": "died.", "start": 196.589, "end": 196.925}, {"word": "Dozens", "start": 197.275, "end": 197.77}, {"word": "of", "start": 197.77, "end": 197.935}, {"word": "theories.", "start": 197.935, "end": 198.596}, {"word": "Decades", "start": 198.596, "end": 199.174}, {"word": "of", "start": 199.174, "end": 199.339}, {"word": "arguing.", "start": 199.339, "end": 199.917}, {"word": "And", "start": 199.917, "end": 200.164}, {"word": "still", "start": 200.164, "end": 200.577}, {"word": "no", "start": 200.577, "end": 200.742}, {"word": "clear", "start": 200.742, "end": 201.155}, {"word": "answer.", "start": 201.155, "end": 201.65}, {"word": "Then", "start": 202.45, "end": 202.773}, {"word": "in", "start": 202.773, "end": 202.934}, {"word": "the", "start": 202.934, "end": 203.176}, {"word": "sixties,", "start": 203.176, "end": 203.741}, {"word": "researchers", "start": 203.741, "end": 204.628}, {"word": "found", "start": 204.628, "end": 205.031}, {"word": "something", "start": 205.031, "end": 205.757}, {"word": "odd.", "start": 205.757, "end": 205.999}, {"word": "Tiny", "start": 205.999, "end": 206.322}, {"word": "melted", "start": 206.322, "end": 206.806}, {"word": "spheres", "start": 206.806, "end": 207.371}, {"word": "of", "start": 207.371, "end": 207.532}, {"word": "glass", "start": 207.532, "end": 207.936}, {"word": "and", "start": 207.936, "end": 208.178}, {"word": "metal", "start": 208.178, "end": 208.581}, {"word": "in", "start": 208.581, "end": 208.742}, {"word": "the", "start": 208.742, "end": 208.984}, {"word": "soil", "start": 208.984, "end": 209.307}, {"word": "and", "start": 209.307, "end": 209.549}, {"word": "tree", "start": 209.549, "end": 209.872}, {"word": "resin.", "start": 209.872, "end": 210.275}, {"word": "Something", "start": 210.625, "end": 211.389}, {"word": "had", "start": 211.389, "end": 211.643}, {"word": "burned,", "start": 211.643, "end": 212.152}, {"word": "and", "start": 212.152, "end": 212.407}, {"word": "left", "start": 212.407, "end": 212.746}, {"word": "only", "start": 212.746, "end": 213.086}, {"word": "dust.", "start": 213.086, "end": 213.425}, {"word": "And", "start": 213.775, "end": 214.02}, {"word": "those", "start": 214.02, "end": 214.429}, {"word": "standing", "start": 214.429, "end": 215.083}, {"word": "trees", "start": 215.083, "end": 215.492}, {"word": "at", "start": 215.492, "end": 215.656}, {"word": "the", "start": 215.656, "end": 215.901}, {"word": "center", "start": 215.901, "end": 216.392}, {"word": "told", "start": 216.392, "end": 216.719}, {"word": "another", "start": 216.719, "end": 217.291}, {"word": "story.", "start": 217.291, "end": 217.7}, {"word": "The", "start": 218.05, "end": 218.284}, {"word": "blast", "start": 218.284, "end": 218.674}, {"word": "hadn't", "start": 218.674, "end": 219.063}, {"word": "come", "start": 219.063, "end": 219.375}, {"word": "from", "start": 219.375, "end": 219.687}, {"word": "the", "start": 219.687, "end": 219.921}, {"word": "side.", "start": 219.921, "end": 220.232}, {"word": "It", "start": 220.232, "end": 220.388}, {"word": "came", "start": 220.388, "end": 220.7}, {"word": "from", "start": 220.7, "end": 221.012}, {"word": "straight", "start": 221.012, "end": 221.635}, {"word": "above.", "start": 221.635, "end": 222.025}, {"word": "That", "start": 222.375, "end": 222.719}, {"word": "pattern", "start": 222.719, "end": 223.322}, {"word": "means", "start": 223.322, "end": 223.752}, {"word": "one", "start": 223.752, "end": 224.01}, {"word": "thing:", "start": 224.01, "end": 224.44}, {"word": "an", "start": 224.44, "end": 224.612}, {"word": "explosion", "start": 224.612, "end": 225.387}, {"word": "in", "start": 225.387, "end": 225.559}, {"word": "mid-air.", "start": 225.559, "end": 226.075}, {"word": "Most", "start": 227.075, "end": 227.403}, {"word": "scientists", "start": 227.403, "end": 228.223}, {"word": "now", "start": 228.223, "end": 228.469}, {"word": "agree:", "start": 228.469, "end": 228.879}, {"word": "a", "start": 228.879, "end": 228.961}, {"word": "space", "start": 228.961, "end": 229.37}, {"word": "rock", "start": 229.37, "end": 229.698}, {"word": "about", "start": 229.698, "end": 230.108}, {"word": "fifty", "start": 230.108, "end": 230.518}, {"word": "meters", "start": 230.518, "end": 231.01}, {"word": "wide", "start": 231.01, "end": 231.338}, {"word": "slammed", "start": 231.338, "end": 231.912}, {"word": "into", "start": 231.912, "end": 232.24}, {"word": "the", "start": 232.24, "end": 232.486}, {"word": "atmosphere", "start": 232.486, "end": 233.306}, {"word": "at", "start": 233.306, "end": 233.47}, {"word": "tens", "start": 233.47, "end": 233.798}, {"word": "of", "start": 233.798, "end": 233.961}, {"word": "thousands", "start": 233.961, "end": 234.699}, {"word": "of", "start": 234.699, "end": 234.863}, {"word": "kilometers", "start": 234.863, "end": 235.683}, {"word": "an", "start": 235.683, "end": 235.847}, {"word": "hour.", "start": 235.847, "end": 236.175}, {"word": "Under", "start": 236.525, "end": 236.934}, {"word": "the", "start": 236.934, "end": 237.179}, {"word": "pressure", "start": 237.179, "end": 237.834}, {"word": "and", "start": 237.834, "end": 238.079}, {"word": "heat,", "start": 238.079, "end": 238.406}, {"word": "it", "start": 238.406, "end": 238.57}, {"word": "couldn't", "start": 238.57, "end": 239.142}, {"word": "survive.", "start": 239.142, "end": 239.715}, {"word": "It", "start": 239.715, "end": 239.878}, {"word": "exploded", "start": 239.878, "end": 240.532}, {"word": "five", "start": 240.532, "end": 240.86}, {"word": "to", "start": 240.86, "end": 241.023}, {"word": "ten", "start": 241.023, "end": 241.269}, {"word": "kilometers", "start": 241.269, "end": 242.086}, {"word": "up.", "start": 242.086, "end": 242.25}, {"word": "An", "start": 242.6, "end": 242.766}, {"word": "airburst.", "start": 242.766, "end": 243.428}, {"word": "It", "start": 243.428, "end": 243.593}, {"word": "explains", "start": 243.593, "end": 244.255}, {"word": "everything:", "start": 244.255, "end": 245.083}, {"word": "the", "start": 245.083, "end": 245.331}, {"word": "flat", "start": 245.331, "end": 245.662}, {"word": "trees,", "start": 245.662, "end": 246.076}, {"word": "the", "start": 246.076, "end": 246.325}, {"word": "standing", "start": 246.325, "end": 246.987}, {"word": "trees,", "start": 246.987, "end": 247.401}, {"word": "the", "start": 247.401, "end": 247.649}, {"word": "missing", "start": 247.649, "end": 248.228}, {"word": "crater.", "start": 248.228, "end": 248.725}, {"word": "The", "start": 249.075, "end": 249.328}, {"word": "rock", "start": 249.328, "end": 249.665}, {"word": "never", "start": 249.665, "end": 250.086}, {"word": "hit", "start": 250.086, "end": 250.339}, {"word": "Earth.", "start": 250.339, "end": 250.76}, {"word": "It", "start": 250.76, "end": 250.929}, {"word": "died", "start": 250.929, "end": 251.266}, {"word": "in", "start": 251.266, "end": 251.434}, {"word": "the", "start": 251.434, "end": 251.687}, {"word": "sky,", "start": 251.687, "end": 251.94}, {"word": "and", "start": 251.94, "end": 252.193}, {"word": "the", "start": 252.193, "end": 252.445}, {"word": "sky", "start": 252.445, "end": 252.698}, {"word": "took", "start": 252.698, "end": 253.035}, {"word": "the", "start": 253.035, "end": 253.288}, {"word": "blow.", "start": 253.288, "end": 253.625}, {"word": "Case", "start": 254.825, "end": 255.319}, {"word": "closed?", "start": 255.319, "end": 256.061}, {"word": "Not", "start": 256.061, "end": 256.432}, {"word": "quite.", "start": 256.432, "end": 257.05}, {"word": "Because", "start": 257.4, "end": 258.022}, {"word": "in", "start": 258.022, "end": 258.2}, {"word": "2013,", "start": 258.2, "end": 258.556}, {"word": "it", "start": 258.556, "end": 258.734}, {"word": "almost", "start": 258.734, "end": 259.267}, {"word": "happened", "start": 259.267, "end": 259.979}, {"word": "again.", "start": 259.979, "end": 260.423}, {"word": "A", "start": 260.423, "end": 260.512}, {"word": "rock", "start": 260.512, "end": 260.868}, {"word": "just", "start": 260.868, "end": 261.224}, {"word": "twenty", "start": 261.224, "end": 261.757}, {"word": "meters", "start": 261.757, "end": 262.291}, {"word": "wide", "start": 262.291, "end": 262.646}, {"word": "exploded", "start": 262.646, "end": 263.358}, {"word": "over", "start": 263.358, "end": 263.713}, {"word": "Chelyabinsk,", "start": 263.713, "end": 264.691}, {"word": "Russia.", "start": 264.691, "end": 265.225}, {"word": "Windows", "start": 265.575, "end": 266.135}, {"word": "shattered", "start": 266.135, "end": 266.856}, {"word": "across", "start": 266.856, "end": 267.336}, {"word": "a", "start": 267.336, "end": 267.416}, {"word": "whole", "start": 267.416, "end": 267.817}, {"word": "city.", "start": 267.817, "end": 268.137}, {"word": "About", "start": 268.137, "end": 268.537}, {"word": "fifteen", "start": 268.537, "end": 269.098}, {"word": "hundred", "start": 269.098, "end": 269.658}, {"word": "people", "start": 269.658, "end": 270.138}, {"word": "were", "start": 270.138, "end": 270.459}, {"word": "hurt,", "start": 270.459, "end": 270.779}, {"word": "mostly", "start": 270.779, "end": 271.259}, {"word": "by", "start": 271.259, "end": 271.419}, {"word": "flying", "start": 271.419, "end": 271.9}, {"word": "glass.", "start": 271.9, "end": 272.3}, {"word": "And", "start": 272.65, "end": 272.899}, {"word": "that", "start": 272.899, "end": 273.232}, {"word": "rock", "start": 273.232, "end": 273.564}, {"word": "was", "start": 273.564, "end": 273.814}, {"word": "far", "start": 273.814, "end": 274.063}, {"word": "smaller", "start": 274.063, "end": 274.645}, {"word": "than", "start": 274.645, "end": 274.977}, {"word": "Tunguska's.", "start": 274.977, "end": 275.725}, {"word": "Scientists", "start": 276.075, "end": 276.881}, {"word": "estimate", "start": 276.881, "end": 277.525}, {"word": "rocks", "start": 277.525, "end": 277.928}, {"word": "like", "start": 277.928, "end": 278.25}, {"word": "Tunguska", "start": 278.25, "end": 278.894}, {"word": "arrive", "start": 278.894, "end": 279.378}, {"word": "every", "start": 279.378, "end": 279.781}, {"word": "few", "start": 279.781, "end": 280.022}, {"word": "hundred", "start": 280.022, "end": 280.586}, {"word": "to", "start": 280.586, "end": 280.747}, {"word": "a", "start": 280.747, "end": 280.828}, {"word": "thousand", "start": 280.828, "end": 281.472}, {"word": "years.", "start": 281.472, "end": 281.875}, {"word": "We", "start": 282.225, "end": 282.41}, {"word": "were", "start": 282.41, "end": 282.779}, {"word": "lucky", "start": 282.779, "end": 283.24}, {"word": "in", "start": 283.24, "end": 283.425}, {"word": "1908.", "start": 283.425, "end": 283.794}, {"word": "It", "start": 283.794, "end": 283.978}, {"word": "hit", "start": 283.978, "end": 284.255}, {"word": "a", "start": 284.255, "end": 284.347}, {"word": "place", "start": 284.347, "end": 284.809}, {"word": "with", "start": 284.809, "end": 285.178}, {"word": "almost", "start": 285.178, "end": 285.731}, {"word": "nobody", "start": 285.731, "end": 286.285}, {"word": "living", "start": 286.285, "end": 286.839}, {"word": "there.", "start": 286.839, "end": 287.3}, {"word": "Earth", "start": 287.65, "end": 288.066}, {"word": "turns", "start": 288.066, "end": 288.482}, {"word": "fifteen", "start": 288.482, "end": 289.065}, {"word": "degrees", "start": 289.065, "end": 289.648}, {"word": "every", "start": 289.648, "end": 290.064}, {"word": "hour.", "start": 290.064, "end": 290.397}, {"word": "Had", "start": 290.397, "end": 290.646}, {"word": "it", "start": 290.646, "end": 290.813}, {"word": "arrived", "start": 290.813, "end": 291.396}, {"word": "a", "start": 291.396, "end": 291.479}, {"word": "few", "start": 291.479, "end": 291.729}, {"word": "hours", "start": 291.729, "end": 292.145}, {"word": "later,", "start": 292.145, "end": 292.561}, {"word": "it", "start": 292.561, "end": 292.727}, {"word": "might", "start": 292.727, "end": 293.144}, {"word": "have", "start": 293.144, "end": 293.476}, {"word": "burst", "start": 293.476, "end": 293.893}, {"word": "above", "start": 293.893, "end": 294.309}, {"word": "a", "start": 294.309, "end": 294.392}, {"word": "city.", "start": 294.392, "end": 294.725}, {"word": "An", "start": 295.075, "end": 295.246}, {"word": "area", "start": 295.246, "end": 295.589}, {"word": "bigger", "start": 295.589, "end": 296.103}, {"word": "than", "start": 296.103, "end": 296.445}, {"word": "London,", "start": 296.445, "end": 296.959}, {"word": "flattened", "start": 296.959, "end": 297.729}, {"word": "in", "start": 297.729, "end": 297.901}, {"word": "seconds.", "start": 297.901, "end": 298.5}, {"word": "Today", "start": 298.85, "end": 299.261}, {"word": "telescopes", "start": 299.261, "end": 300.082}, {"word": "scan", "start": 300.082, "end": 300.411}, {"word": "the", "start": 300.411, "end": 300.657}, {"word": "sky", "start": 300.657, "end": 300.904}, {"word": "for", "start": 300.904, "end": 301.15}, {"word": "rocks", "start": 301.15, "end": 301.561}, {"word": "like", "start": 301.561, "end": 301.889}, {"word": "this.", "start": 301.889, "end": 302.218}, {"word": "We've", "start": 302.218, "end": 302.546}, {"word": "found", "start": 302.546, "end": 302.957}, {"word": "most", "start": 302.957, "end": 303.286}, {"word": "of", "start": 303.286, "end": 303.45}, {"word": "the", "start": 303.45, "end": 303.696}, {"word": "giant", "start": 303.696, "end": 304.107}, {"word": "ones.", "start": 304.107, "end": 304.436}, {"word": "The", "start": 304.436, "end": 304.682}, {"word": "medium", "start": 304.682, "end": 305.175}, {"word": "ones?", "start": 305.175, "end": 305.504}, {"word": "Most", "start": 305.504, "end": 305.832}, {"word": "are", "start": 305.832, "end": 306.079}, {"word": "still", "start": 306.079, "end": 306.489}, {"word": "undiscovered.", "start": 306.489, "end": 307.475}, {"word": "The", "start": 307.825, "end": 308.054}, {"word": "next", "start": 308.054, "end": 308.359}, {"word": "one", "start": 308.359, "end": 308.588}, {"word": "is", "start": 308.588, "end": 308.74}, {"word": "out", "start": 308.74, "end": 308.969}, {"word": "there.", "start": 308.969, "end": 309.351}, {"word": "We", "start": 309.351, "end": 309.503}, {"word": "just", "start": 309.503, "end": 309.808}, {"word": "don't", "start": 309.808, "end": 310.113}, {"word": "know", "start": 310.113, "end": 310.419}, {"word": "where.", "start": 310.419, "end": 310.8}, {"word": "So", "start": 311.8, "end": 311.983}, {"word": "what", "start": 311.983, "end": 312.348}, {"word": "do", "start": 312.348, "end": 312.531}, {"word": "you", "start": 312.531, "end": 312.805}, {"word": "think", "start": 312.805, "end": 313.262}, {"word": "hit", "start": 313.262, "end": 313.536}, {"word": "Siberia?", "start": 313.536, "end": 314.176}, {"word": "A,", "start": 314.176, "end": 314.268}, {"word": "an", "start": 314.268, "end": 314.45}, {"word": "asteroid.", "start": 314.45, "end": 315.182}, {"word": "B,", "start": 315.182, "end": 315.273}, {"word": "a", "start": 315.273, "end": 315.364}, {"word": "comet.", "start": 315.364, "end": 315.821}, {"word": "Vote", "start": 315.821, "end": 316.187}, {"word": "in", "start": 316.187, "end": 316.37}, {"word": "the", "start": 316.37, "end": 316.644}, {"word": "comments.", "start": 316.644, "end": 317.375}, {"word": "Next", "start": 317.725, "end": 318.123}, {"word": "time", "start": 318.123, "end": 318.52}, {"word": "on", "start": 318.52, "end": 318.719}, {"word": "BOMA,", "start": 318.719, "end": 319.117}, {"word": "another", "start": 319.117, "end": 319.813}, {"word": "mystery", "start": 319.813, "end": 320.509}, {"word": "nobody", "start": 320.509, "end": 321.106}, {"word": "can", "start": 321.106, "end": 321.404}, {"word": "explain.", "start": 321.404, "end": 322.1}];
+        const totalDuration = 322.45;
+
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
+        const scrubber = document.getElementById('scrubber');
+        const timeDisplay = document.getElementById('time-display');
+        const sceneImg = document.getElementById('scene-img');
+        const metaIdx = document.getElementById('meta-idx');
+        const metaCue = document.getElementById('meta-cue');
+        const metaMove = document.getElementById('meta-move');
+        const metaDur = document.getElementById('meta-dur');
+        const captionOverlay = document.getElementById('caption-overlay');
+        const sceneList = document.getElementById('scene-list');
+
+        let currentScene = null;
+
+        // Populate sidebar scenes
+        scenes.forEach((sc, i) => {
+            const card = document.createElement('div');
+            card.className = 'scene-card';
+            card.id = `card-${sc.idx}`;
+            card.onclick = () => jumpToTime(sc.t0);
+            card.innerHTML = `
+                <img class="scene-thumb" src="${sc.img}" onerror="this.src='';">
+                <div class="scene-info">
+                    <span class="scene-num">Scene #${sc.idx} (${sc.cue})</span>
+                    <span>Move: <b>${sc.move}</b> (${sc.duration}s)</span>
+                    <span style="color:#8b949e; font-family: monospace;">${formatTime(sc.t0)} - ${formatTime(sc.t1)}</span>
+                </div>
+            `;
+            sceneList.appendChild(card);
+        });
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function updateSceneView(time) {
+            const match = scenes.find(s => time >= s.t0 && time < s.t1) || scenes[scenes.length - 1];
+            if (match && match !== currentScene) {
+                currentScene = match;
+                sceneImg.src = match.img;
+                metaIdx.innerText = `#${match.idx}`;
+                metaCue.innerText = match.cue;
+                metaMove.innerText = match.move.toUpperCase();
+                metaDur.innerText = `${match.duration}s`;
+
+                document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('active'));
+                const activeCard = document.getElementById(`card-${match.idx}`);
+                if (activeCard) {
+                    activeCard.classList.add('active');
+                    activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+
+            // Word-level dynamic captioning
+            const activeWordIdx = words.findIndex(w => time >= w.start && time <= w.end);
+            if (activeWordIdx !== -1) {
+                const startWindow = Math.max(0, activeWordIdx - 3);
+                const endWindow = Math.min(words.length, activeWordIdx + 4);
+                const chunk = words.slice(startWindow, endWindow).map((w, idx) => {
+                    const isCurrent = (startWindow + idx) === activeWordIdx;
+                    return isCurrent ? `<span class="active-word">${w.word}</span>` : w.word;
+                }).join(' ');
+                captionOverlay.innerHTML = chunk;
+            } else {
+                captionOverlay.innerText = currentScene ? (currentScene.text || '') : '';
+            }
+        }
+
+        function jumpToTime(t) {
+            audio.currentTime = t;
+            scrubber.value = t;
+            timeDisplay.innerText = `${formatTime(t)} / ${formatTime(totalDuration)}`;
+            updateSceneView(t);
+        }
+
+        playBtn.onclick = () => {
+            if (audio.paused) {
+                audio.play().catch(() => {});
+                playBtn.innerText = '⏸ Pause';
+                playBtn.classList.add('active');
+            } else {
+                audio.pause();
+                playBtn.innerText = '▶ Play';
+                playBtn.classList.remove('active');
+            }
+        };
+
+        audio.ontimeupdate = () => {
+            const t = audio.currentTime;
+            scrubber.value = t;
+            timeDisplay.innerText = `${formatTime(t)} / ${formatTime(totalDuration)}`;
+            updateSceneView(t);
+        };
+
+        scrubber.oninput = () => {
+            const t = parseFloat(scrubber.value);
+            audio.currentTime = t;
+            timeDisplay.innerText = `${formatTime(t)} / ${formatTime(totalDuration)}`;
+            updateSceneView(t);
+        };
+
+        // Initialize at 0
+        if (scenes.length > 0) updateSceneView(0);
+        timeDisplay.innerText = `00:00 / ${formatTime(totalDuration)}`;
+    </script>
+</body>
+</html>

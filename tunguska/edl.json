@@ -1,0 +1,2001 @@
+{
+  "project_id": "tunguska",
+  "seed": 42,
+  "motion": true,
+  "parallax": true,
+  "fps": 30,
+  "total_duration": 322.45,
+  "canvas_size": [
+    1920,
+    1080
+  ],
+  "oversample": 1.25,
+  "punch_ins": [
+    {
+      "word": "seconds",
+      "score": 1.0,
+      "cue": "01.5",
+      "t_in": 2.5,
+      "t_out": 4.0,
+      "duration": 1.5,
+      "zoom": 1.055,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Flattened",
+      "score": 0.7,
+      "cue": "02.3",
+      "t_in": 9.947,
+      "t_out": 11.227,
+      "duration": 1.28,
+      "zoom": 1.043,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Tunguska",
+      "score": 0.7,
+      "cue": "04.3",
+      "t_in": 19.977,
+      "t_out": 21.417,
+      "duration": 1.44,
+      "zoom": 1.046,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Pine",
+      "score": 0.7,
+      "cue": "05.5",
+      "t_in": 28.524,
+      "t_out": 29.924,
+      "duration": 1.4,
+      "zoom": 1.059,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Moscow,",
+      "score": 0.7,
+      "cue": "06.8",
+      "t_in": 36.665,
+      "t_out": 38.165,
+      "duration": 1.5,
+      "zoom": 1.042,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "fireball",
+      "score": 1.0,
+      "cue": "08.1",
+      "t_in": 44.5,
+      "t_out": 46.2,
+      "duration": 1.7,
+      "zoom": 1.06,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "People",
+      "score": 0.7,
+      "cue": "12.4",
+      "t_in": 68.305,
+      "t_out": 69.695,
+      "duration": 1.39,
+      "zoom": 1.043,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Britain",
+      "score": 0.7,
+      "cue": "15.6",
+      "t_in": 86.118,
+      "t_out": 87.558,
+      "duration": 1.44,
+      "zoom": 1.067,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Russian",
+      "score": 0.7,
+      "cue": "20.3",
+      "t_in": 112.411,
+      "t_out": 113.811,
+      "duration": 1.4,
+      "zoom": 1.044,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "stranger",
+      "score": 1.0,
+      "cue": "23.4",
+      "t_in": 129.5,
+      "t_out": 131.0,
+      "duration": 1.5,
+      "zoom": 1.065,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "one",
+      "score": 1.0,
+      "cue": "24.9",
+      "t_in": 134.93,
+      "t_out": 136.19,
+      "duration": 1.26,
+      "zoom": 1.07,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Kulik",
+      "score": 0.7,
+      "cue": "26.2",
+      "t_in": 144.89,
+      "t_out": 146.18,
+      "duration": 1.29,
+      "zoom": 1.045,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Most",
+      "score": 0.9,
+      "cue": "30.14",
+      "t_in": 168.432,
+      "t_out": 169.732,
+      "duration": 1.3,
+      "zoom": 1.046,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "four:",
+      "score": 1.0,
+      "cue": "32.1",
+      "t_in": 177.887,
+      "t_out": 179.327,
+      "duration": 1.44,
+      "zoom": 1.058,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "1946,",
+      "score": 1.0,
+      "cue": "33.7",
+      "t_in": 186.256,
+      "t_out": 187.666,
+      "duration": 1.41,
+      "zoom": 1.06,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "never",
+      "score": 0.9,
+      "cue": "34.9",
+      "t_in": 195.666,
+      "t_out": 196.756,
+      "duration": 1.09,
+      "zoom": 1.041,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "one",
+      "score": 1.0,
+      "cue": "40.3",
+      "t_in": 223.752,
+      "t_out": 225.212,
+      "duration": 1.46,
+      "zoom": 1.06,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "never",
+      "score": 0.9,
+      "cue": "44.2",
+      "t_in": 249.665,
+      "t_out": 251.075,
+      "duration": 1.41,
+      "zoom": 1.047,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "twenty",
+      "score": 1.0,
+      "cue": "46.10",
+      "t_in": 261.224,
+      "t_out": 262.524,
+      "duration": 1.3,
+      "zoom": 1.055,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "hundred",
+      "score": 1.0,
+      "cue": "47.8",
+      "t_in": 269.098,
+      "t_out": 270.338,
+      "duration": 1.24,
+      "zoom": 1.055,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Tunguska",
+      "score": 0.7,
+      "cue": "49.4",
+      "t_in": 278.25,
+      "t_out": 279.64,
+      "duration": 1.39,
+      "zoom": 1.041,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "most",
+      "score": 0.9,
+      "cue": "53.11",
+      "t_in": 302.957,
+      "t_out": 304.207,
+      "duration": 1.25,
+      "zoom": 1.051,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "next",
+      "score": 1.0,
+      "cue": "54.1",
+      "t_in": 308.0,
+      "t_out": 309.8,
+      "duration": 1.8,
+      "zoom": 1.06,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "Siberia?",
+      "score": 0.7,
+      "cue": "55.6",
+      "t_in": 313.536,
+      "t_out": 314.736,
+      "duration": 1.2,
+      "zoom": 1.042,
+      "easing": "easeOutQuad"
+    }
+  ],
+  "camera_shakes": [
+    {
+      "cue": "10.0",
+      "t_in": 53.9,
+      "t_out": 58.0,
+      "amplitude_pct": 0.0035,
+      "freq1": 1.2,
+      "freq2": 2.4,
+      "phase_x": 0.0,
+      "phase_y": 1.0
+    },
+    {
+      "cue": "12.0",
+      "t_in": 66.0,
+      "t_out": 70.0,
+      "amplitude_pct": 0.0025,
+      "freq1": 1.0,
+      "freq2": 2.0,
+      "phase_x": 0.5,
+      "phase_y": 1.5
+    },
+    {
+      "cue": "42.0",
+      "t_in": 236.53,
+      "t_out": 241.0,
+      "amplitude_pct": 0.0038,
+      "freq1": 1.4,
+      "freq2": 2.8,
+      "phase_x": 0.2,
+      "phase_y": 1.2
+    },
+    {
+      "cue": "47.0",
+      "t_in": 265.57,
+      "t_out": 269.0,
+      "amplitude_pct": 0.0028,
+      "freq1": 1.1,
+      "freq2": 2.2,
+      "phase_x": 0.4,
+      "phase_y": 1.4
+    }
+  ],
+  "scenes": [
+    {
+      "scene_idx": 0,
+      "cue": "01.0",
+      "t0": 0.0,
+      "t1": 8.525,
+      "duration": 8.525,
+      "img": "img/s01.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake,punch@\"flat\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "01.5",
+          "t": 2.451,
+          "img": "elements/cut/fireball.png",
+          "text": "",
+          "x": 0.5,
+          "y": 0.16,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 1,
+      "cue": "02.0",
+      "t0": 8.525,
+      "t1": 14.8,
+      "duration": 6.275,
+      "img": "card",
+      "text": "80,000,000|TREES",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": [
+        {
+          "cue": "02.0",
+          "t": 8.475,
+          "img": "count",
+          "text": "80000000|TREES",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "02.11",
+          "t": 13.294,
+          "img": "elements/cut/asteroid.png",
+          "text": "",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": true
+        }
+      ]
+    },
+    {
+      "scene_idx": 2,
+      "cue": "03.0",
+      "t0": 14.8,
+      "t1": 19.225,
+      "duration": 4.425,
+      "img": "img/s03.jpg",
+      "text": "WHAT HIT?",
+      "pos": "",
+      "extra": "parallax:push",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 3,
+      "cue": "04.0",
+      "t0": 19.225,
+      "t1": 25.875,
+      "duration": 6.65,
+      "img": "img/s04.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "ken_burns",
+        "zoom_start": 1.0,
+        "zoom_end": 1.04,
+        "pan_x": 0.02,
+        "pan_y": 0.0,
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "type": "parallax",
+        "move": "driftR"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 4,
+      "cue": "05.0",
+      "t0": 25.875,
+      "t1": 32.375,
+      "duration": 6.5,
+      "img": "img/s05.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:driftR",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "05.12",
+          "t": 31.313,
+          "img": "elements/cut/reindeer.png",
+          "text": "",
+          "x": 0.1958,
+          "y": 0.78,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 5,
+      "cue": "06.0",
+      "t0": 32.375,
+      "t1": 39.525,
+      "duration": 7.15,
+      "img": "img/s06.jpg",
+      "text": "TUNGUSKA RIVER",
+      "pos": "",
+      "extra": "parallax:off",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": []
+    },
+    {
+      "scene_idx": 6,
+      "cue": "07.0",
+      "t0": 39.525,
+      "t1": 44.5,
+      "duration": 4.975,
+      "img": "img/s07.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": [
+        {
+          "cue": "07.2",
+          "t": 40.024,
+          "img": "elements/cut/clock_0717.png",
+          "text": "",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 7,
+      "cue": "08.0",
+      "t0": 44.5,
+      "t1": 48.6,
+      "duration": 4.1,
+      "img": "img/s08.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:punch@\"brighter\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "08.6",
+          "t": 46.604,
+          "img": "elements/cut/fireball.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 8,
+      "cue": "09.0",
+      "t0": 48.6,
+      "t1": 53.9,
+      "duration": 5.3,
+      "img": "img/s09.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 9,
+      "cue": "10.0",
+      "t0": 53.9,
+      "t1": 58.4,
+      "duration": 4.5,
+      "img": "img/s10.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "10.1",
+          "t": 53.927,
+          "img": "elements/cut/shockwave_ring.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 10,
+      "cue": "11.0",
+      "t0": 58.4,
+      "t1": 65.925,
+      "duration": 7.525,
+      "img": "img/s11.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "11.4",
+          "t": 60.058,
+          "img": "elements/cut/trader.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "11.0",
+          "t": 58.35,
+          "img": "peek:bl:curious",
+          "text": "",
+          "x": 0.14,
+          "y": 0.76,
+          "h": 0.3,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 11,
+      "cue": "12.0",
+      "t0": 65.925,
+      "t1": 71.65,
+      "duration": 5.725,
+      "img": "img/s12.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "12.3",
+          "t": 67.564,
+          "img": "elements/cut/shattered_window.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 12,
+      "cue": "13.0",
+      "t0": 71.65,
+      "t1": 78.4,
+      "duration": 6.75,
+      "img": "card",
+      "text": "15|MEGATONS",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": [
+        {
+          "cue": "13.6",
+          "t": 74.354,
+          "img": "count",
+          "text": "15|MEGATONS",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "13.10",
+          "t": 76.218,
+          "img": "elements/cut/shockwave_ring.png",
+          "text": "",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 13,
+      "cue": "14.0",
+      "t0": 78.4,
+      "t1": 83.7,
+      "duration": 5.3,
+      "img": "img/s14.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 14,
+      "cue": "15.0",
+      "t0": 83.7,
+      "t1": 90.525,
+      "duration": 6.825,
+      "img": "img/s15.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:push",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "15.4",
+          "t": 85.054,
+          "img": "elements/cut/seismograph.png",
+          "text": "",
+          "x": 0.1455,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 15,
+      "cue": "16.0",
+      "t0": 90.525,
+      "t1": 97.375,
+      "duration": 6.85,
+      "img": "img/s16.jpg",
+      "text": "LONDON, 1908",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "16.11",
+          "t": 95.329,
+          "img": "elements/cut/londoner_newspaper.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 16,
+      "cue": "17.0",
+      "t0": 97.375,
+      "t1": 101.2,
+      "duration": 3.825,
+      "img": "img/s17.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:punch@\"that\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 17,
+      "cue": "18.0",
+      "t0": 101.2,
+      "t1": 105.0,
+      "duration": 3.8,
+      "img": "img/s18.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 18,
+      "cue": "19.0",
+      "t0": 105.0,
+      "t1": 111.425,
+      "duration": 6.425,
+      "img": "img/s19.jpg",
+      "text": "1914 - 1927",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "19.9",
+          "t": 108.248,
+          "img": "count",
+          "text": "19|YEARS",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 19,
+      "cue": "20.0",
+      "t0": 111.425,
+      "t1": 118.975,
+      "duration": 7.55,
+      "img": "img/s20.jpg",
+      "text": "LEONID KULIK",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": [
+        {
+          "cue": "20.8",
+          "t": 115.419,
+          "img": "elements/cut/kulik.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 20,
+      "cue": "21.0",
+      "t0": 118.975,
+      "t1": 124.7,
+      "duration": 5.725,
+      "img": "img/s21.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "21.5",
+          "t": 120.692,
+          "img": "elements/cut/tent.png",
+          "text": "",
+          "x": 0.1578,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 21,
+      "cue": "22.0",
+      "t0": 124.7,
+      "t1": 128.075,
+      "duration": 3.375,
+      "img": "img/s22.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:pull",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "22.8",
+          "t": 127.013,
+          "img": "peek:bl:thinking",
+          "text": "",
+          "x": 0.14,
+          "y": 0.76,
+          "h": 0.3,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 22,
+      "cue": "23.0",
+      "t0": 128.075,
+      "t1": 131.125,
+      "duration": 3.05,
+      "img": "img/s23.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:punch@\"stranger\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 23,
+      "cue": "24.0",
+      "t0": 131.125,
+      "t1": 138.2,
+      "duration": 7.075,
+      "img": "img/s24.jpg",
+      "text": "ALL POINTING OUTWARD",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 24,
+      "cue": "25.0",
+      "t0": 138.2,
+      "t1": 144.175,
+      "duration": 5.975,
+      "img": "img/s25.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:push",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "25.3",
+          "t": 138.784,
+          "img": "elements/cut/tree_pole.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 25,
+      "cue": "26.0",
+      "t0": 144.175,
+      "t1": 149.8,
+      "duration": 5.625,
+      "img": "img/s26.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": [
+        {
+          "cue": "26.6",
+          "t": 146.718,
+          "img": "elements/cut/cracked_ground.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 26,
+      "cue": "27.0",
+      "t0": 149.8,
+      "t1": 155.325,
+      "duration": 5.525,
+      "img": "img/s27.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "27.8",
+          "t": 152.374,
+          "img": "elements/cut/city_skyline.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 27,
+      "cue": "28.0",
+      "t0": 155.325,
+      "t1": 158.025,
+      "duration": 2.7,
+      "img": "card",
+      "text": "SO WHAT DID THIS?",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": [
+        {
+          "cue": "28.1",
+          "t": 155.537,
+          "img": "elements/cut/big_qmark.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 28,
+      "cue": "29.0",
+      "t0": 158.025,
+      "t1": 163.55,
+      "duration": 5.525,
+      "img": "img/s29.jpg",
+      "text": "THEORY 1: COMET",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "29.3",
+          "t": 158.852,
+          "img": "elements/cut/comet.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 29,
+      "cue": "30.0",
+      "t0": 163.55,
+      "t1": 170.7,
+      "duration": 7.15,
+      "img": "img/s30.jpg",
+      "text": "THEORY 2: LAKE CHEKO",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "30.3",
+          "t": 164.372,
+          "img": "elements/cut/lake.png",
+          "text": "",
+          "x": 0.2223,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 30,
+      "cue": "31.0",
+      "t0": 170.7,
+      "t1": 177.375,
+      "duration": 6.675,
+      "img": "img/s31.jpg",
+      "text": "THEORY 3: ANTIMATTER",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "31.2",
+          "t": 171.616,
+          "img": "elements/cut/atom_flask.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "31.6",
+          "t": 173.11,
+          "img": "elements/cut/blackhole.png",
+          "text": "",
+          "x": 0.8318,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 31,
+      "cue": "32.0",
+      "t0": 177.375,
+      "t1": 183.275,
+      "duration": 5.9,
+      "img": "img/s32.jpg",
+      "text": "THEORY 4: TESLA",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "32.0",
+          "t": 177.325,
+          "img": "elements/cut/tesla.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 32,
+      "cue": "33.0",
+      "t0": 183.275,
+      "t1": 192.475,
+      "duration": 9.2,
+      "img": "img/s33.jpg",
+      "text": "THEORY 5: SPACESHIP",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "33.2",
+          "t": 184.157,
+          "img": "elements/cut/alien_stickman.png",
+          "text": "",
+          "x": 0.0936,
+          "y": 0.2,
+          "h": 0.2492,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "33.14",
+          "t": 189.373,
+          "img": "peek:left-edge:shocked",
+          "text": "",
+          "x": 0.2348,
+          "y": 0.5,
+          "h": 0.2492,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 33,
+      "cue": "34.0",
+      "t0": 192.475,
+      "t1": 197.275,
+      "duration": 4.8,
+      "img": "img/s34.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "ken_burns",
+        "zoom_start": 1.0,
+        "zoom_end": 1.05,
+        "pan_x": -0.01,
+        "pan_y": 0.01,
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "type": "parallax",
+        "move": "orbit"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 34,
+      "cue": "35.0",
+      "t0": 197.275,
+      "t1": 202.45,
+      "duration": 5.175,
+      "img": "card",
+      "text": "DOZENS OF THEORIES.|ZERO ANSWERS.",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": []
+    },
+    {
+      "scene_idx": 35,
+      "cue": "36.0",
+      "t0": 202.45,
+      "t1": 210.625,
+      "duration": 8.175,
+      "img": "img/s36.jpg",
+      "text": "1960s RESEARCH",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "36.4",
+          "t": 203.691,
+          "img": "elements/cut/microscope.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "36.9",
+          "t": 206.272,
+          "img": "elements/cut/glass_spheres.png",
+          "text": "",
+          "x": 0.8323,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 36,
+      "cue": "37.0",
+      "t0": 210.625,
+      "t1": 213.775,
+      "duration": 3.15,
+      "img": "img/s37.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:punch@\"dust\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 37,
+      "cue": "38.0",
+      "t0": 213.775,
+      "t1": 218.05,
+      "duration": 4.275,
+      "img": "img/s38.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:push",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 38,
+      "cue": "39.0",
+      "t0": 218.05,
+      "t1": 222.375,
+      "duration": 4.325,
+      "img": "img/s39.jpg",
+      "text": "FROM STRAIGHT ABOVE",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 39,
+      "cue": "40.0",
+      "t0": 222.375,
+      "t1": 227.075,
+      "duration": 4.7,
+      "img": "card",
+      "text": "AN EXPLOSION|IN MID-AIR",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": []
+    },
+    {
+      "scene_idx": 40,
+      "cue": "41.0",
+      "t0": 227.075,
+      "t1": 236.525,
+      "duration": 9.45,
+      "img": "img/s41.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "41.5",
+          "t": 228.911,
+          "img": "elements/cut/asteroid.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "41.8",
+          "t": 230.058,
+          "img": "count",
+          "text": "50|METERS",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 41,
+      "cue": "42.0",
+      "t0": 236.525,
+      "t1": 242.6,
+      "duration": 6.075,
+      "img": "img/s42.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake,punch@\"exploded\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "42.9",
+          "t": 239.828,
+          "img": "elements/cut/fireball.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 42,
+      "cue": "43.0",
+      "t0": 242.6,
+      "t1": 249.075,
+      "duration": 6.475,
+      "img": "img/s43.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "43.1",
+          "t": 242.716,
+          "img": "peek:left-edge:thinking",
+          "text": "",
+          "x": 0.14,
+          "y": 0.5,
+          "h": 0.3,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 43,
+      "cue": "44.0",
+      "t0": 249.075,
+      "t1": 254.825,
+      "duration": 5.75,
+      "img": "img/s44.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 44,
+      "cue": "45.0",
+      "t0": 254.825,
+      "t1": 257.4,
+      "duration": 2.575,
+      "img": "card",
+      "text": "CASE CLOSED?|NOT QUITE.",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "ken_burns",
+        "zoom_start": 1.0,
+        "zoom_end": 1.022,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "easeInOutSine"
+      },
+      "parallax_effect": null,
+      "overlays": []
+    },
+    {
+      "scene_idx": 45,
+      "cue": "46.0",
+      "t0": 257.4,
+      "t1": 265.575,
+      "duration": 8.175,
+      "img": "img/s46.jpg",
+      "text": "CHELYABINSK 2013",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "46.15",
+          "t": 263.663,
+          "img": "elements/cut/shattered_window.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        },
+        {
+          "cue": "46.2",
+          "t": 258.15,
+          "img": "count",
+          "text": "2013|YEAR",
+          "x": 0.86,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 46,
+      "cue": "47.0",
+      "t0": 265.575,
+      "t1": 272.65,
+      "duration": 7.075,
+      "img": "img/s47.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "47.7",
+          "t": 268.487,
+          "img": "count",
+          "text": "1500|HURT",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 47,
+      "cue": "48.0",
+      "t0": 272.65,
+      "t1": 276.075,
+      "duration": 3.425,
+      "img": "img/s48.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "parallax:driftL",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "48.5",
+          "t": 274.013,
+          "img": "elements/cut/asteroid.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideL",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 48,
+      "cue": "49.0",
+      "t0": 276.075,
+      "t1": 282.225,
+      "duration": 6.15,
+      "img": "img/s49.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "pull",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "pull"
+      },
+      "overlays": [
+        {
+          "cue": "49.11",
+          "t": 280.778,
+          "img": "elements/cut/clock_0717.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "rise",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 49,
+      "cue": "50.0",
+      "t0": 282.225,
+      "t1": 287.65,
+      "duration": 5.425,
+      "img": "img/s50.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 50,
+      "cue": "51.0",
+      "t0": 287.65,
+      "t1": 295.075,
+      "duration": 7.425,
+      "img": "img/s51.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "push",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "push"
+      },
+      "overlays": [
+        {
+          "cue": "51.19",
+          "t": 294.342,
+          "img": "peek:bl:shocked",
+          "text": "",
+          "x": 0.14,
+          "y": 0.76,
+          "h": 0.3,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 51,
+      "cue": "52.0",
+      "t0": 295.075,
+      "t1": 298.85,
+      "duration": 3.775,
+      "img": "img/s52.jpg",
+      "text": "2,000 SQ KM",
+      "pos": "",
+      "extra": "fx:shake",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": [
+        {
+          "cue": "52.4",
+          "t": 296.395,
+          "img": "elements/cut/city_skyline.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "pop",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 52,
+      "cue": "53.0",
+      "t0": 298.85,
+      "t1": 307.825,
+      "duration": 8.975,
+      "img": "img/s53.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftL",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftL"
+      },
+      "overlays": [
+        {
+          "cue": "53.1",
+          "t": 299.211,
+          "img": "elements/cut/telescope.png",
+          "text": "",
+          "x": 0.14,
+          "y": 0.2,
+          "h": 0.3,
+          "motion": "slideR",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 53,
+      "cue": "54.0",
+      "t0": 307.825,
+      "t1": 311.8,
+      "duration": 3.975,
+      "img": "img/s54.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "fx:punch@\"next\"",
+      "base_effect": {
+        "type": "parallax",
+        "move": "driftR",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "driftR"
+      },
+      "overlays": []
+    },
+    {
+      "scene_idx": 54,
+      "cue": "55.0",
+      "t0": 311.8,
+      "t1": 317.725,
+      "duration": 5.925,
+      "img": "card",
+      "text": "WHAT HIT SIBERIA?|A: ASTEROID   B: COMET",
+      "pos": "big",
+      "extra": "",
+      "base_effect": {
+        "type": "static",
+        "zoom_start": 1.0,
+        "zoom_end": 1.0,
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "easing": "linear"
+      },
+      "parallax_effect": null,
+      "overlays": [
+        {
+          "cue": "55.13",
+          "t": 315.771,
+          "img": "peek:left-edge:pointing",
+          "text": "",
+          "x": 0.14,
+          "y": 0.5,
+          "h": 0.3,
+          "motion": "peek",
+          "plain": false,
+          "cross": false
+        }
+      ]
+    },
+    {
+      "scene_idx": 55,
+      "cue": "56.0",
+      "t0": 317.725,
+      "t1": 322.45,
+      "duration": 4.725,
+      "img": "img/s56.jpg",
+      "text": "",
+      "pos": "",
+      "extra": "",
+      "base_effect": {
+        "type": "parallax",
+        "move": "orbit",
+        "easing": "easeInOutCubic"
+      },
+      "parallax_effect": {
+        "move": "orbit"
+      },
+      "overlays": []
+    }
+  ],
+  "stickers": false,
+  "captions": true
+}

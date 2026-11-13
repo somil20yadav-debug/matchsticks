@@ -1,0 +1,66 @@
+# ========================================================
+# Matchsticks Open-Source .gitignore
+# ========================================================
+
+# --- 1. PROPRIETARY / PERSONAL YOUTUBE BRANDING (STRICT) ---
+# BOMA character assets, sheets, DNA, and peeks are personal IP
+_boma_core/
+_boma_test/
+*boma*
+*BOMA*
+boma_director.py
+director.py
+
+# --- 2. OTHER PERSONAL YOUTUBE DOCUMENTARY PROJECTS ---
+# Kept safely on local machine; only 'tunguska' is published as the example
+/antikythera/
+/moon10x/
+/ocean-crossing/
+/samudragupta/
+/short/
+/sun5s/
+/terracotta/
+/ulfberht/
+/yasuke/
+/clips/
+
+# --- 3. LARGE MEDIA & RENDER ASSETS (Avoid GitHub limits) ---
+*.mp4
+*.mov
+*.avi
+*.webm
+*.mkv
+*.wav
+*.mp3
+
+# Intermediate Render Frames, Slices & Caches
+**/frames*/
+**/video_clips/
+**/parallax_cache/
+**/batch1_old_backup/
+**/lama_cache/
+**/_legacy_patches/
+**/elements/raw/
+demo_*/
+qc*.jpg
+tunguska/img/*.jpg
+*test*
+*crop*
+*unmarked*
+
+# --- 4. PYTHON / ENVIRONMENT / OS ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.env
+.env.*
+*.local
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+.agents/
+*.swp
+*.swo

@@ -1,0 +1,101 @@
+cue	img	text	pos	extra
+01.0	img/s01.jpg			"fx:shake,punch@""flat"""
++01.5	elements/cut/fireball.png		auto	rise
+02.0	card	80,000,000|TREES	big	
++02.0	count	80000000|TREES	auto	rise
++02.11	elements/cut/asteroid.png		auto	pop+x
+03.0	img/s03.jpg	WHAT HIT?		parallax:push
+04.0	card	THE TUNGUSKA|EVENT	big	
+05.0	img/s05.jpg			parallax:driftR
++05.12	elements/cut/reindeer.png		auto	slideL
+06.0	img/s06.jpg	TUNGUSKA RIVER		parallax:off
+07.0	img/s07.jpg			
++07.2	elements/cut/clock_0717.png		auto	rise
+08.0	img/s08.jpg			"fx:punch@""brighter"""
++08.6	elements/cut/fireball.png		auto	slideR
+09.0	img/s09.jpg			fx:shake
+10.0	img/s10.jpg			fx:shake
++10.1	elements/cut/shockwave_ring.png		auto	pop
+11.0	img/s11.jpg			
++11.4	elements/cut/trader.png		auto	slideL
++11.0	peek:bl:curious		auto	peek
+12.0	img/s12.jpg			
++12.3	elements/cut/shattered_window.png		auto	pop
+13.0	card	15|MEGATONS	big	
++13.6	count	15|MEGATONS	auto	rise
++13.10	elements/cut/shockwave_ring.png		auto	rise
+14.0	img/s14.jpg			
+15.0	img/s15.jpg			parallax:push
++15.4	elements/cut/seismograph.png		auto	slideR
+16.0	img/s16.jpg	LONDON, 1908		
++16.11	elements/cut/londoner_newspaper.png		auto	pop
+17.0	img/s17.jpg			"fx:punch@""that"""
+18.0	img/s18.jpg			
+19.0	img/s19.jpg	1914 - 1927		
++19.9	count	19|YEARS	auto	rise
+20.0	img/s20.jpg	LEONID KULIK		
++20.8	elements/cut/kulik.png		auto	rise
+21.0	img/s21.jpg			fx:shake
++21.5	elements/cut/tent.png		auto	slideR
+22.0	img/s22.jpg			parallax:pull
++22.8	peek:bl:thinking		auto	peek
+23.0	img/s23.jpg			"fx:punch@""stranger"""
+24.0	img/s24.jpg	ALL POINTING OUTWARD		
+25.0	img/s25.jpg			parallax:push
++25.3	elements/cut/tree_pole.png		auto	rise
+26.0	img/s26.jpg			
++26.6	elements/cut/cracked_ground.png		auto	slideL
+27.0	img/s27.jpg			
++27.8	elements/cut/city_skyline.png		auto	rise
+28.0	card	SO WHAT DID THIS?	big	
++28.1	elements/cut/big_qmark.png		auto	pop
+29.0	img/s29.jpg	THEORY 1: COMET		
++29.3	elements/cut/comet.png		auto	slideR
+30.0	img/s30.jpg	THEORY 2: LAKE CHEKO		
++30.3	elements/cut/lake.png		auto	pop
+31.0	img/s31.jpg	THEORY 3: ANTIMATTER		
++31.2	elements/cut/atom_flask.png		auto	slideL
++31.6	elements/cut/blackhole.png		auto	slideR
+32.0	img/s32.jpg	THEORY 4: TESLA		fx:shake
++32.0	elements/cut/tesla.png		auto	rise
+33.0	img/s33.jpg	THEORY 5: SPACESHIP		
++33.2	elements/cut/alien_stickman.png		auto	pop
++33.14	peek:left-edge:shocked		auto	peek
+34.0	img/s34.jpg			
+35.0	card	DOZENS OF THEORIES.|ZERO ANSWERS.	big	
+36.0	img/s36.jpg	1960s RESEARCH		
++36.4	elements/cut/microscope.png		auto	slideL
++36.9	elements/cut/glass_spheres.png		auto	pop
+37.0	img/s37.jpg			"fx:punch@""dust"""
+38.0	img/s38.jpg			parallax:push
+39.0	img/s39.jpg	FROM STRAIGHT ABOVE		fx:shake
+40.0	card	AN EXPLOSION|IN MID-AIR	big	
+41.0	img/s41.jpg			
++41.5	elements/cut/asteroid.png		auto	slideR
++41.8	count	50|METERS	auto	rise
+42.0	img/s42.jpg			"fx:shake,punch@""exploded"""
++42.9	elements/cut/fireball.png		auto	pop
+43.0	img/s43.jpg			
++43.1	peek:left-edge:thinking		auto	peek
+44.0	img/s44.jpg			
+45.0	card	CASE CLOSED?|NOT QUITE.	big	
+46.0	img/s46.jpg	CHELYABINSK 2013		
++46.15	elements/cut/shattered_window.png		auto	pop
++46.2	count	2013|YEAR	auto	rise
+47.0	img/s47.jpg			fx:shake
++47.7	count	1500|HURT	auto	rise
+48.0	img/s48.jpg			parallax:driftL
++48.5	elements/cut/asteroid.png		auto	slideL
+49.0	img/s49.jpg			
++49.11	elements/cut/clock_0717.png		auto	rise
+50.0	img/s50.jpg			
+51.0	img/s51.jpg			
++51.19	peek:bl:shocked		auto	peek
+52.0	img/s52.jpg	2,000 SQ KM		fx:shake
++52.4	elements/cut/city_skyline.png		auto	pop
+53.0	img/s53.jpg			
++53.1	elements/cut/telescope.png		auto	slideR
+54.0	img/s54.jpg			"fx:punch@""next"""
+55.0	card	WHAT HIT SIBERIA?|A: ASTEROID   B: COMET	big	
++55.13	peek:left-edge:pointing		auto	peek
+56.0	img/s56.jpg			
