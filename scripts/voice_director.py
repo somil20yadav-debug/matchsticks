@@ -9,16 +9,80 @@ Usage:
     python scripts/voice_director.py <slug> --ingest [--file path/to/VO.wav]
 """
 
-import asyncio, csv, json, os, subprocess, sys
+import asyncio, csv, json, os, re, subprocess, sys
 from scipy.io import wavfile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def clean_script_tags(text):
+    """Strips [SFX: ...], [CUE: ...], [VISUAL: ...] and other production cues for clean speech synthesis."""
+    cleaned = re.sub(r'\[.*?\]', '', text)
+    cleaned = re.sub(r'(?i)\b(voice|narrator|text on screen):\s*', '', cleaned)
+    return " ".join(cleaned.split()).strip()
+
+
+def script_to_ssml(text, voice="en-US-ChristopherNeural"):
+    """Converts emotion and pause tags into SSML for Microsoft Edge TTS."""
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    ssml_body = []
+    has_tags = False
+
+    for line in lines:
+        if re.match(r'^\[(SFX|CUE|VISUAL):.*\]$', line, re.IGNORECASE):
+            continue
+
+        pause_m = re.search(r'\[(pause|break)(?::\s*([\d\.]+(?:ms|s)?))?\]', line, re.IGNORECASE)
+        if pause_m:
+            has_tags = True
+            dur = pause_m.group(2) or "800ms"
+            if not dur.endswith(('s', 'ms')):
+                dur = f"{dur}s"
+            ssml_body.append(f'  <break time="{dur}" />')
+            line = re.sub(r'\[(pause|break)(?::\s*[\d\.]+(?:ms|s)?)?\]', '', line, flags=re.IGNORECASE).strip()
+            if not line:
+                continue
+
+        if re.search(r'\[(whisper|whispering)\]', line, re.IGNORECASE):
+            has_tags = True
+            cl = re.sub(r'\[(whisper|whispering)\]', '', line, flags=re.IGNORECASE).strip()
+            cl = re.sub(r'\[.*?\]', '', cl).strip()
+            if cl:
+                ssml_body.append(f'  <mstts:express-as style="whispering">{cl}</mstts:express-as>')
+        elif re.search(r'\[(serious|ominous|somber)\]', line, re.IGNORECASE):
+            has_tags = True
+            cl = re.sub(r'\[(serious|ominous|somber)\]', '', line, flags=re.IGNORECASE).strip()
+            cl = re.sub(r'\[.*?\]', '', cl).strip()
+            if cl:
+                ssml_body.append(f'  <mstts:express-as style="serious">{cl}</mstts:express-as>')
+        else:
+            cl = re.sub(r'\[.*?\]', '', line).strip()
+            if cl:
+                ssml_body.append(f'  <p>{cl}</p>')
+
+    if not has_tags:
+        return None
+
+    inner_xml = "\n".join(ssml_body)
+    return (
+        '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" '
+        'xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US">\n'
+        f'  <voice name="{voice}">\n'
+        f'{inner_xml}\n'
+        '  </voice>\n'
+        '</speak>'
+    )
+
+
 async def synthesize_edge_tts(text, out_mp3, voice="en-US-ChristopherNeural"):
     """Synthesizes text using Microsoft Edge TTS (100% free, natural documentary narrator)."""
     import edge_tts
-    communicate = edge_tts.Communicate(text, voice, rate="+2%", pitch="-2Hz")
+    ssml = script_to_ssml(text, voice)
+    if ssml:
+        communicate = edge_tts.Communicate(ssml, voice)
+    else:
+        cleaned = clean_script_tags(text)
+        communicate = edge_tts.Communicate(cleaned, voice, rate="+2%", pitch="-2Hz")
     await communicate.save(out_mp3)
     return out_mp3
 
@@ -29,8 +93,10 @@ def synthesize_kokoro_tts(text, out_wav, voice="am_adam"):
     import soundfile as sf
     import numpy as np
 
-    pipeline = KPipeline(lang_code='a')
-    generator = pipeline(text, voice=voice, speed=1.0)
+    cleaned = clean_script_tags(text)
+    lang_code = 'b' if voice.startswith('b') else 'a'
+    pipeline = KPipeline(lang_code=lang_code)
+    generator = pipeline(cleaned, voice=voice, speed=1.0)
     all_audio = []
     sr = 24000
     for _, _, audio in generator:

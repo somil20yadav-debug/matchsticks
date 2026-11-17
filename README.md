@@ -111,16 +111,24 @@ python matchsticks.py generate bermuda --provider web
 
 ---
 
-### Step 3: Generate Voiceover Narration (Free)
-Generate realistic documentary narration with one command:
+### Step 3: Generate Voiceover Narration (100% Free & Unlimited)
+No ElevenLabs credits needed. Generate realistic documentary narration with automated tag parsing:
 ```bash
-# 100% Free Edge-TTS (Broadcast natural documentary narrator):
+# 100% Free Edge-TTS (Broadcast natural documentary narrator with SSML tag support):
 python matchsticks.py voice bermuda --engine edge
 
-# Or local Kokoro TTS:
+# Or local Kokoro-82M (Studio grade, automatic script cue cleaner):
 python matchsticks.py voice bermuda --engine kokoro
 ```
-*(Have your own voice recording? Just place your audio file as `bermuda/VO.wav`!)*
+
+#### How Script Tags Are Handled:
+* **Edge-TTS with Tags**: If your script has cues like `[whisper]`, `[serious]`, or `[pause: 800ms]`, Matchsticks automatically compiles them into Microsoft SSML tags for expressive speech delivery and dramatic silence breaks.
+* **Kokoro-82M**: Matchsticks automatically strips production tags (`[SFX: ...]`, `[CUE: ...]`) using regex so Kokoro delivers clean, warm narration without reading brackets.
+* **Voice Customization**:
+  * Edge-TTS voices: `--voice en-US-ChristopherNeural` (default), `en-US-GuyNeural`, or `en-GB-RyanNeural`
+  * Kokoro voices: `--voice am_adam` (deep narrator), `bm_george` (British), or `af_bella`
+
+*(Have your own external voice recording? Just place your audio file as `bermuda/VO.wav`!)*
 
 ---
 
