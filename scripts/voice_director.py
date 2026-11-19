@@ -207,17 +207,24 @@ def process_voice(slug, mode="ingest", engine="edge", input_file=None, voice_nam
     words_tsv = os.path.join(project_dir, "WORDS.tsv")
 
     if mode == "synthesize":
+        vo_txt = os.path.join(project_dir, "VO_FOR_ELEVENLABS.txt")
         script_md = os.path.join(project_dir, "SCRIPT.md")
         lines_tsv = os.path.join(project_dir, "LINES.tsv")
         narration_text = ""
 
-        if os.path.exists(script_md):
+        if os.path.exists(vo_txt):
+            with open(vo_txt, "r", encoding="utf-8") as f:
+                narration_text = f.read().strip()
+        elif os.path.exists(lines_tsv):
+            with open(lines_tsv, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f, delimiter="\t")
+                narration_text = " ".join([r.get("text", "") for r in reader if r.get("text")])
+        elif os.path.exists(script_md):
             with open(script_md, "r", encoding="utf-8") as f:
                 content = f.read()
                 # Extract narration lines
                 narration_lines = [l.strip() for l in content.splitlines() if l.strip() and not l.startswith("#")]
                 narration_text = " ".join(narration_lines)
-        elif os.path.exists(lines_tsv):
             with open(lines_tsv, "r", encoding="utf-8") as f:
                 reader = csv.DictReader(f, delimiter="\t")
                 narration_text = " ".join([r.get("text", "") for r in reader if r.get("text")])

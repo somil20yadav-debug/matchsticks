@@ -20,6 +20,7 @@ SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 sys.path.append(SCRIPTS_DIR)
 
 from caption_renderer import CaptionEngine, resolve_font
+from clean_watermarks import clean_image_surgical
 
 
 def slice_audio(mix_path, out_slice_path, start_t, duration_t):
@@ -56,7 +57,7 @@ def load_shot_composition(project_dir):
     return comp_map
 
 
-def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16", font="anton", style="minimal", mode="black", hook_title=None, fps=30):
+def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16", font="anton", style="minimal", mode="black", hook_title=None, badge_text=None, fps=30):
     project_dir = os.path.join(BASE_DIR, slug)
     if not os.path.exists(project_dir):
         sys.exit(f"[ERROR] Project '{slug}' not found.")
@@ -72,9 +73,31 @@ def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16",
     clean_img_dir = os.path.join(project_dir, "img", "clean")
     comp_map = load_shot_composition(project_dir)
 
+    fs_check, data_check = wavfile.read(mix_path)
+    total_audio_dur = len(data_check) / fs_check
+    if duration is None or duration <= 0:
+        duration = total_audio_dur - start_t
+    elif duration == 15.0 and "--duration" not in sys.argv:
+        duration = total_audio_dur - start_t
+
     end_t = start_t + duration
     print(f"=== Full-Bleed 9:16 Shorts Engine: Clipping '{slug}' ({start_t:.1f}s - {end_t:.1f}s) ===")
     print(f"    Font: '{font.upper()}' | Caption Style: '{style.upper()}'")
+
+    # Auto-resolve hook_title & badge from metadata if not explicitly provided
+    if not hook_title:
+        for meta_file in ["METADATA.json", "metadata.json"]:
+            mp = os.path.join(project_dir, meta_file)
+            if os.path.exists(mp):
+                try:
+                    with open(mp, "r", encoding="utf-8") as mf:
+                        mdata = json.load(mf)
+                        hook_title = mdata.get("title") or mdata.get("hook_title") or mdata.get("topic")
+                        if not badge_text:
+                            badge_text = mdata.get("badge")
+                        break
+                except Exception:
+                    pass
 
     # 1. Slice Audio
     temp_dir = os.path.join(project_dir, "temp_short")
@@ -86,6 +109,8 @@ def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16",
     # 2. Match Scenes & Composition
     scenes = []
     last_valid_img = None
+    scenes_tsv = os.path.join(project_dir, "SCENES.tsv")
+
     if os.path.exists(edl_path):
         with open(edl_path, "r", encoding="utf-8") as f:
             edl = json.load(f)
@@ -102,9 +127,13 @@ def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16",
                 if not is_card:
                     base = os.path.splitext(os.path.basename(img_rel))[0]
                     cand_png = os.path.join(clean_img_dir, f"{base}.png")
+                    cand_webp = os.path.join(project_dir, "img", f"{base}.webp")
                     cand_jpg = os.path.join(clean_img_dir, f"{base}.jpg")
                     if os.path.exists(cand_png):
                         img_path = cand_png
+                    elif os.path.exists(cand_webp):
+                        clean_image_surgical(cand_webp, cand_png)
+                        img_path = cand_png if os.path.exists(cand_png) else cand_webp
                     elif os.path.exists(cand_jpg):
                         img_path = cand_jpg
                     elif os.path.exists(os.path.join(project_dir, img_rel)):
@@ -126,6 +155,56 @@ def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16",
                     "space": space,
                     "cam_move": cam_move,
                     "text": sc.get("text", "")
+                })
+
+    elif os.path.exists(scenes_tsv):
+        with open(scenes_tsv, "r", encoding="utf-8") as f:
+            raw_rows = [r for r in csv.DictReader(f, delimiter="\t") if r.get("cue") is not None]
+        for i, row in enumerate(raw_rows):
+            try:
+                sc_t0 = float(row.get("cue", 0.0))
+            except ValueError:
+                continue
+            if i + 1 < len(raw_rows):
+                try:
+                    sc_t1 = float(raw_rows[i+1].get("cue", end_t))
+                except ValueError:
+                    sc_t1 = end_t
+            else:
+                sc_t1 = end_t
+
+            if sc_t1 >= start_t and sc_t0 <= end_t:
+                img_rel = row.get("img", "")
+                is_card = (img_rel.lower() == "card" or not img_rel.startswith("img/"))
+                img_path = None
+                sid = str(i + 1)
+                space = comp_map.get(sid, "center")
+
+                if not is_card:
+                    base = os.path.splitext(os.path.basename(img_rel))[0]
+                    cand_png = os.path.join(clean_img_dir, f"{base}.png")
+                    cand_webp = os.path.join(project_dir, "img", f"{base}.webp")
+                    cand_jpg = os.path.join(clean_img_dir, f"{base}.jpg")
+                    if os.path.exists(cand_png):
+                        img_path = cand_png
+                    elif os.path.exists(cand_webp):
+                        clean_image_surgical(cand_webp, cand_png)
+                        img_path = cand_png if os.path.exists(cand_png) else cand_webp
+                    elif os.path.exists(cand_jpg):
+                        img_path = cand_jpg
+                    elif os.path.exists(os.path.join(project_dir, img_rel)):
+                        img_path = os.path.join(project_dir, img_rel)
+                    if img_path:
+                        last_valid_img = img_path
+
+                scenes.append({
+                    "t0": sc_t0 - start_t,
+                    "t1": sc_t1 - start_t,
+                    "is_card": is_card,
+                    "img_path": img_path or last_valid_img,
+                    "space": space,
+                    "cam_move": row.get("extra", ""),
+                    "text": row.get("text", "")
                 })
 
     if not scenes or not any(s["img_path"] for s in scenes):
@@ -167,22 +246,33 @@ def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16",
 
         if mode == "black":
             # -------------------------------------------------------------
-            # EXACT 16:9 FRAME ON BLACK BACKGROUND (Zero cropping / cutting)
+            # EXACT ASPECT RATIO PRESERVED ON BLACK BACKGROUND (Zero cropping / cutting)
             # -------------------------------------------------------------
             frame = Image.new("RGB", (W, H), (0, 0, 0))
 
+            bw, bh = base_img.size
+            aspect = bh / max(bw, 1)
+
+            # Fit dynamically into 1080x1920 while preserving full image width
             vid_w = W  # 1080
-            vid_h = int(W * 9 / 16)  # 608
-            vid_y = (H - vid_h) // 2  # 656
+            vid_h = int(W * aspect)
+            if vid_h > H:
+                vid_h = H
+                vid_w = int(H / aspect)
+                vid_x = (W - vid_w) // 2
+                vid_y = 0
+            else:
+                vid_x = 0
+                vid_y = (H - vid_h) // 2
 
-            # Scale exact 16:9 wide frame untouched
-            scaled_16_9 = base_img.resize((vid_w, vid_h), Image.Resampling.LANCZOS)
+            # Scale exact frame untouched (Zero horizontal or vertical crop)
+            scaled_frame = base_img.resize((vid_w, vid_h), Image.Resampling.LANCZOS)
 
-            # If card scene (e.g. 80,000,000 TREES), render clean typography inside the 16:9 box
+            # If card scene (e.g. 80,000,000 TREES), render clean typography inside the frame box
             if active_sc.get("is_card") and active_sc.get("text"):
                 dim = Image.new("RGBA", (vid_w, vid_h), (5, 8, 15, 175))
-                scaled_16_9 = Image.alpha_composite(scaled_16_9.convert("RGBA"), dim).convert("RGB")
-                draw_card = ImageDraw.Draw(scaled_16_9)
+                scaled_frame = Image.alpha_composite(scaled_frame.convert("RGBA"), dim).convert("RGB")
+                draw_card = ImageDraw.Draw(scaled_frame)
 
                 raw_text = active_sc["text"].replace("|", "\n").strip()
                 lines = [l.strip() for l in raw_text.splitlines() if l.strip()]
@@ -206,24 +296,26 @@ def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16",
                     draw_card.text(((vid_w - w1) // 2, y_mid), t1, font=font_num, fill="#FFD02A")
                     draw_card.text(((vid_w - w2) // 2, y_mid + 85), t2, font=font_sub, fill="#FFFFFF")
 
-            # Paste 16:9 video into black canvas
-            frame.paste(scaled_16_9, (0, vid_y))
+            # Paste image into black canvas
+            frame.paste(scaled_frame, (vid_x, vid_y))
 
             # Render Opus Clip Style Top Viral Hook Title (Top black canvas)
-            if hook_title:
+            if hook_title and vid_y > 60:
                 draw_top = ImageDraw.Draw(frame)
                 font_badge = resolve_font("bahnschrift", 24)
-                font_hook = resolve_font(font, 62)
-                badge_text = "🔴 THE UNTOLD STORY"
-                b_bbox = font_badge.getbbox(badge_text)
-                draw_top.text(((W - (b_bbox[2] - b_bbox[0])) // 2, 280), badge_text, font=font_badge, fill="#ff4444")
+                font_hook = resolve_font(font, 56)
+                badge_str = badge_text or "ECHOES UNSEALED"
+                b_bbox = font_badge.getbbox(badge_str)
+                top_badge_y = max(vid_y // 2 - 40, 40)
+                draw_top.text(((W - (b_bbox[2] - b_bbox[0])) // 2, top_badge_y), badge_str, font=font_badge, fill="#58a6ff")
 
                 h_text = hook_title.upper()
                 h_bbox = font_hook.getbbox(h_text)
-                draw_top.text(((W - (h_bbox[2] - h_bbox[0])) // 2, 340), h_text, font=font_hook, fill="#FFFFFF")
+                draw_top.text(((W - (h_bbox[2] - h_bbox[0])) // 2, top_badge_y + 45), h_text, font=font_hook, fill="#FFFFFF")
 
-            # Captions on pure black bottom canvas (y = 1420)
-            frame = caption_engine.render_caption_on_image(frame, start_t + t, y_pos=1420)
+            # Captions on pure black bottom canvas (Zero overlap with art)
+            cap_y = min(H - 180, vid_y + vid_h + max((H - (vid_y + vid_h)) // 3, 20))
+            frame = caption_engine.render_caption_on_image(frame, start_t + t, y_pos=cap_y)
 
         else:
             # -------------------------------------------------------------
@@ -338,11 +430,13 @@ def main():
     slug = sys.argv[1].lower()
     start_t = 0.0
     duration = 15.0
-    name = f"{slug}_short_9x16"
+    clean_slug_name = slug.replace("\\", "_").replace("/", "_")
+    name = f"{clean_slug_name}_short_9x16"
     font = "anton"
     style = "minimal"
     mode = "black"
     hook_title = None
+    badge_text = None
 
     if "--start" in sys.argv:
         start_t = float(sys.argv[sys.argv.index("--start") + 1])
@@ -360,8 +454,10 @@ def main():
         hook_title = sys.argv[sys.argv.index("--title") + 1]
     elif "--hook" in sys.argv:
         hook_title = sys.argv[sys.argv.index("--hook") + 1]
+    if "--badge" in sys.argv:
+        badge_text = sys.argv[sys.argv.index("--badge") + 1]
 
-    out = build_short_video(slug, start_t=start_t, duration=duration, short_name=name, font=font, style=style, mode=mode, hook_title=hook_title)
+    out = build_short_video(slug, start_t=start_t, duration=duration, short_name=name, font=font, style=style, mode=mode, hook_title=hook_title, badge_text=badge_text)
     try:
         subprocess.run(["cmd", "/c", "start", "", out])
     except Exception:

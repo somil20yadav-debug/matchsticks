@@ -249,37 +249,23 @@ class CaptionEngine:
             return pil_img.convert("RGB")
 
         # -------------------------------------------------------------
-        # STYLE 3: MINIMAL (Pure Clean Text, Thin 1.5px Outline, NO SHADOW)
-        # -------------------------------------------------------------
-        elif self.style == "minimal":
-            draw = ImageDraw.Draw(pil_img)
-            cur_x = start_x
-            for rw in rendered_words:
-                col = "#FFD02A" if rw["is_active"] else ("#00F0FF" if rw["is_num"] else "#FFFFFF")
-                y_offset = (cy - max_h // 2) - (2 if rw["is_active"] else 0)
-
-                # Thin, ultra-crisp outline only (NO drop shadow)
-                draw.text((cur_x, y_offset), rw["text"], font=rw["font"], fill=col, stroke_width=2, stroke_fill="#0d1117")
-                cur_x += rw["adv_w"] + space_w
-            return pil_img
-
-        # -------------------------------------------------------------
-        # STYLE 4: CLASSIC (High-Contrast Bold Outline + Drop Shadow)
+        # STYLE 3 & 4: CLASSIC / MINIMAL (High-Contrast Heavy 6px Black Outline)
         # -------------------------------------------------------------
         else:
             draw = ImageDraw.Draw(pil_img)
-            # Drop shadow pass
+            # Heavy Black Contour Outline Pass (6px pure black outline for ultimate readability)
             cur_x = start_x
             for rw in rendered_words:
                 y_offset = (cy - max_h // 2) - (4 if rw["is_active"] else 0)
-                draw.text((cur_x + 2, y_offset + 2), rw["text"], font=rw["font"], fill="black", stroke_width=5, stroke_fill="black")
+                # Outer shadow/border
+                draw.text((cur_x, y_offset), rw["text"], font=rw["font"], fill="black", stroke_width=6, stroke_fill="black")
                 cur_x += rw["adv_w"] + space_w
 
-            # Main text pass
+            # Main Crisp Text Pass
             cur_x = start_x
             for rw in rendered_words:
-                col = "#FFD02A" if rw["is_active"] else ("#00F0FF" if rw["is_num"] else "#FFFFFF")
+                col = "#FFD200" if rw["is_active"] else "#FFFFFF"
                 y_offset = (cy - max_h // 2) - (4 if rw["is_active"] else 0)
-                draw.text((cur_x, y_offset), rw["text"], font=rw["font"], fill=col, stroke_width=4, stroke_fill="black")
+                draw.text((cur_x, y_offset), rw["text"], font=rw["font"], fill=col, stroke_width=3, stroke_fill="black")
                 cur_x += rw["adv_w"] + space_w
             return pil_img

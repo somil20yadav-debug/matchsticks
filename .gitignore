@@ -23,6 +23,11 @@ director.py
 /ulfberht/
 /yasuke/
 /clips/
+/dark_forest/
+/herculaneum/
+/nalanda/
+/strasbourg/
+/yakuza/
 
 # --- 3. LARGE MEDIA & RENDER ASSETS (Avoid GitHub limits) ---
 *.mp4
@@ -43,7 +48,10 @@ director.py
 **/elements/raw/
 demo_*/
 qc*.jpg
-tunguska/img/*.jpg
+tunguska/img/
+tunguska/exports/
+tunguska/fonts/
+tunguska/qc_player.html
 *test*
 *crop*
 *unmarked*

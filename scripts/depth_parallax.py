@@ -136,8 +136,17 @@ def inpaint_holes(image_rgb, mask_255):
         except Exception:
             pass
 
-    # Robust OpenCV Telea Inpainting fallback
-    inpainted = cv2.inpaint(image_rgb, dilated_mask, inpaintRadius=7, flags=cv2.INPAINT_TELEA)
+    # Fast downscaled OpenCV inpainting fallback (downscale 3x for 10x speedup, then upscale)
+    scale = 0.33
+    sw, sh = max(64, int(w * scale)), max(64, int(h * scale))
+    small_img = cv2.resize(image_rgb, (sw, sh), interpolation=cv2.INTER_AREA)
+    small_mask = cv2.resize(dilated_mask, (sw, sh), interpolation=cv2.INTER_NEAREST)
+    inp_small = cv2.inpaint(small_img, small_mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
+    inp_full = cv2.resize(inp_small, (w, h), interpolation=cv2.INTER_LINEAR)
+    
+    # Composite: keep original unmasked pixels pristine, replace holes with inpainted content
+    mask_3c = (dilated_mask[:, :, None] > 0).astype(np.uint8)
+    inpainted = np.where(mask_3c, inp_full, image_rgb)
     return inpainted
 
 def split_and_inpaint_layers(pil_img, depth_map):

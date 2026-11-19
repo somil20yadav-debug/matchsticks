@@ -47,10 +47,13 @@ def print_menu():
   [7] RENDER  : python matchsticks.py render <slug> [--font anton] [--style minimal]
                 (Full 1080p longform master render with 3D parallax & captions)
 
-  [8] SHORT   : python matchsticks.py short <slug> [--mode black|crop] [--style minimal]
-                (9:16 vertical viral shorts with exact frame & black background)
+  [8] SHORT   : python matchsticks.py short <slug> [--title "..."] [--badge "..."] [--mode black|crop]
+                (Prestige Editorial 3:4 Shorts with Top Hook Header & Bottom Subtitles)
 
-  [9] CLIP    : python matchsticks.py clip <yt_url> [--duration 30] [--style minimal]
+  [9] CLEAN   : python matchsticks.py clean <slug>
+                (Surgical Gemini watermark inpainting - zero blurred boxes)
+
+  [10] CLIP   : python matchsticks.py clip <yt_url> [--duration 30] [--style minimal]
                 (AI YouTube Auto-Clipper with Whisper subtitles - Opus Clip)
 
   5 Available Fonts : 'anton', 'bahnschrift', 'impact', 'segoe', 'consolas'
@@ -165,6 +168,11 @@ def main():
     elif action == "short":
         short_script = os.path.join(SCRIPTS_DIR, "shorts_builder.py")
         cmd = [sys.executable, short_script, slug] + sys.argv[3:]
+        subprocess.run(cmd)
+
+    elif action in ("clean", "delogo"):
+        clean_script = os.path.join(SCRIPTS_DIR, "clean_watermarks.py")
+        cmd = [sys.executable, clean_script, slug] + sys.argv[3:]
         subprocess.run(cmd)
 
     else:

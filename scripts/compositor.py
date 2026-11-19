@@ -166,7 +166,7 @@ def apply_camera_motion(base_arr_rgb, base_effect, t_in_scene, duration, oversam
 
     return cv2.warpAffine(base_arr_rgb, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
 
-def render_edl(edl_path, audio_path, out_mp4, draft=False, broll_file=None, font="anton", style="minimal"):
+def render_edl(edl_path, audio_path, out_mp4, draft=False, broll_file=None, font="anton", style="minimal", res="1080p"):
     edl_path = os.path.abspath(edl_path)
     project_dir = os.path.dirname(edl_path)
     with open(edl_path, "r", encoding="utf-8") as f:
@@ -272,11 +272,14 @@ def render_edl(edl_path, audio_path, out_mp4, draft=False, broll_file=None, font
         if f.endswith(".png"):
             os.remove(os.path.join(frames_dir, f))
 
+    vf_args = ["-vf", "scale=2560:1440:flags=bicubic"] if (res == "1440p" and not draft) else []
     cmd = [
         ffmpeg_exe, "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
         "-s", f"{render_w}x{render_h}", "-r", str(FPS), "-i", "-",
-        "-i", audio_path, "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-        "-pix_fmt", "yuv420p", "-threads", "3", "-c:a", "aac", "-b:a", "192k",
+        "-i", audio_path
+    ] + vf_args + [
+        "-c:v", "libx264", "-preset", "fast", "-crf", "18",
+        "-pix_fmt", "yuv420p", "-threads", "8", "-c:a", "aac", "-b:a", "192k",
         "-shortest", out_mp4
     ]
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
@@ -286,8 +289,16 @@ def render_edl(edl_path, audio_path, out_mp4, draft=False, broll_file=None, font
     last_frame_bytes = None
 
     total_frames = int(total * FPS) + 1
+    import time
+    t_start = time.time()
     for fi in range(total_frames):
         t = fi / FPS
+        if fi % (FPS * 10) == 0 or fi == total_frames - 1:
+            elapsed = time.time() - t_start
+            fps_actual = fi / max(1.0, elapsed)
+            pct = (fi / total_frames) * 100.0
+            eta_sec = (total_frames - fi) / max(0.1, fps_actual)
+            print(f"[1440p ENCODE] Frame {fi}/{total_frames} ({pct:.1f}%) | {t:.1f}s / {total:.1f}s | Speed: {fps_actual:.1f} fps | ETA: {eta_sec/60:.1f} mins", flush=True)
         while si + 1 < len(scenes) and t >= scenes[si + 1]["t0"]:
             if last_frame_bytes:
                 # Save QC milestone frame
@@ -486,5 +497,6 @@ if __name__ == "__main__":
     ap.add_argument("--draft", action="store_true")
     ap.add_argument("--font", default="anton")
     ap.add_argument("--style", default="minimal")
+    ap.add_argument("--res", choices=["1080p", "1440p"], default="1080p")
     args = ap.parse_args()
-    render_edl(args.edl, args.audio, args.out, draft=args.draft, font=args.font, style=args.style)
+    render_edl(args.edl, args.audio, args.out, draft=args.draft, font=args.font, style=args.style, res=args.res)

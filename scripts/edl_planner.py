@@ -326,8 +326,12 @@ def build_edl(project_dir, seed_val=42, motion=False, parallax=False, out_path="
     scenes_file = os.path.join(project_dir, "SCENES.tsv")
     shots_file = os.path.join(project_dir, "SHOTS.tsv")
 
-    words = {f"{r['line']}.{r['i']}": max(0.0, float(r["start"]))
-             for r in csv.DictReader(open(words_file, encoding="utf-8"), delimiter="\t")}
+    words = {}
+    for r in csv.DictReader(open(words_file, encoding="utf-8"), delimiter="\t"):
+        words[f"{r['line']}.{r['i']}"] = max(0.0, float(r["start"]))
+        if f"{r['line']}.0" not in words:
+            words[f"{r['line']}.0"] = max(0.0, float(r["start"]))
+            words[r['line']] = max(0.0, float(r["start"]))
     
     rows = [r for r in csv.reader(open(scenes_file, encoding="utf-8"), delimiter="\t")
             if r and r[0].strip() and not r[0].startswith("#") and r[0] != "cue"]
@@ -408,87 +412,22 @@ def build_edl(project_dir, seed_val=42, motion=False, parallax=False, out_path="
                 "pan_y": 0.0,
                 "easing": "linear"
             }
-        else:
-            # Check if this scene has an active punch-in: rule: NEVER combine Ken Burns and punch-in in the same scene
-            scene_has_punch_in = any(
-                max(sc["t0"], pi["t_in"]) < min(sc["t1"], pi["t_out"])
-                for pi in punch_ins
-            )
-
-            # Ken Burns capped at <= 35-40% of scenes; never on scenes with punch-ins, never on short cuts (< 2.2s)
-            allow_ken_burns = (
-                (not scene_has_punch_in)
-                and (dur >= 2.2)
-                and (last_effect != "ken_burns")
-                and (float(s_rng.uniform(0.0, 1.0)) < 0.35)
-            )
-
-            if not allow_ken_burns:
-                base_effect = {
-                    "type": "static",
-                    "zoom_start": 1.0,
-                    "zoom_end": 1.0,
-                    "pan_x": 0.0,
-                    "pan_y": 0.0,
-                    "easing": "linear"
-                }
-                last_effect = "static"
-            else:
-                last_effect = "ken_burns"
-                # Very slow, subtle motion: <= 2.5% zoom over entire scene, pan <= 0.5% width (<= 9.6 px total)
-                kb_mode = s_rng.choice(["slow_push", "slow_pull", "drift_left", "drift_right"])
-                pan_subtle = round(float(s_rng.uniform(0.002, 0.005)), 4)  # <= 0.5% width
-                
-                if kb_mode == "slow_push":
-                    base_effect = {
-                        "type": "ken_burns",
-                        "zoom_start": 1.0,
-                        "zoom_end": round(float(s_rng.uniform(1.020, 1.028)), 3), # <= 2.8% zoom
-                        "pan_x": 0.0,
-                        "pan_y": 0.0,
-                        "easing": "easeInOutSine"
-                    }
-                elif kb_mode == "slow_pull":
-                    base_effect = {
-                        "type": "ken_burns",
-                        "zoom_start": round(float(s_rng.uniform(1.020, 1.028)), 3),
-                        "zoom_end": 1.0,
-                        "pan_x": 0.0,
-                        "pan_y": 0.0,
-                        "easing": "easeInOutSine"
-                    }
-                elif kb_mode == "drift_left":
-                    base_effect = {
-                        "type": "ken_burns",
-                        "zoom_start": 1.015,
-                        "zoom_end": 1.015,
-                        "pan_x": -pan_subtle,
-                        "pan_y": 0.0,
-                        "easing": "linear"
-                    }
-                else:
-                    base_effect = {
-                        "type": "ken_burns",
-                        "zoom_start": 1.015,
-                        "zoom_end": 1.015,
-                        "pan_x": pan_subtle,
-                        "pan_y": 0.0,
-                        "easing": "linear"
-                    }
-
-        # Determine parallax move (script syntax or global flag)
+        # Parse extra tokens (split by whitespace and commas)
+        tokens = [t.strip() for t in extra.replace(",", " ").split() if t.strip()]
         explicit_parallax = None
-        for tok in extra.split():
+        explicit_move = None
+        for tok in tokens:
             if tok.startswith("parallax:"):
                 explicit_parallax = tok.split(":", 1)[1].strip()
+            elif tok in ("push", "pull", "driftL", "driftR", "orbit"):
+                explicit_move = tok
 
+        # Parallax ONLY when explicitly requested in SCENES.tsv (or if global parallax forced)
         parallax_move = None
-        if explicit_parallax == "off":
-            parallax_move = None
-        elif explicit_parallax in ("push", "pull", "driftL", "driftR", "orbit"):
-            if dur >= 3.0 and img != "card":
-                parallax_move = explicit_parallax
+        if explicit_parallax in ("push", "pull", "driftL", "driftR", "orbit") and img != "card":
+            parallax_move = explicit_parallax
         elif parallax and img != "card" and dur >= 3.0:
+            # Only if globally requested and not a card
             parallax_move = str(s_rng.choice(["push", "pull", "driftL", "driftR", "orbit"]))
 
         if parallax_move:
@@ -498,6 +437,58 @@ def build_edl(project_dir, seed_val=42, motion=False, parallax=False, out_path="
                 "easing": "easeInOutCubic"
             }
             last_effect = "parallax"
+        elif img != "card" and dur >= 1.5:
+            # Active cinematic Ken Burns on all non-card scenes (zero character ghosting, zero static slideshow)
+            pan_subtle = round(float(s_rng.uniform(0.008, 0.018)), 4)
+            kb_direction = explicit_move or s_rng.choice(["push", "pull", "driftL", "driftR"])
+            
+            if kb_direction == "push":
+                base_effect = {
+                    "type": "ken_burns",
+                    "zoom_start": 1.0,
+                    "zoom_end": round(float(s_rng.uniform(1.025, 1.045)), 3),
+                    "pan_x": 0.0,
+                    "pan_y": 0.0,
+                    "easing": "easeInOutSine"
+                }
+            elif kb_direction == "pull":
+                base_effect = {
+                    "type": "ken_burns",
+                    "zoom_start": round(float(s_rng.uniform(1.025, 1.045)), 3),
+                    "zoom_end": 1.0,
+                    "pan_x": 0.0,
+                    "pan_y": 0.0,
+                    "easing": "easeInOutSine"
+                }
+            elif kb_direction == "driftL":
+                base_effect = {
+                    "type": "ken_burns",
+                    "zoom_start": 1.02,
+                    "zoom_end": 1.02,
+                    "pan_x": -pan_subtle,
+                    "pan_y": 0.0,
+                    "easing": "linear"
+                }
+            else:  # driftR or orbit
+                base_effect = {
+                    "type": "ken_burns",
+                    "zoom_start": 1.02,
+                    "zoom_end": 1.02,
+                    "pan_x": pan_subtle,
+                    "pan_y": 0.0,
+                    "easing": "linear"
+                }
+            last_effect = "ken_burns"
+        else:
+            base_effect = {
+                "type": "static",
+                "zoom_start": 1.0,
+                "zoom_end": 1.0,
+                "pan_x": 0.0,
+                "pan_y": 0.0,
+                "easing": "linear"
+            }
+            last_effect = "static"
 
         edl_sc = {
             "scene_idx": idx,
