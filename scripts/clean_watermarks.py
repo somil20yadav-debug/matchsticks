@@ -12,6 +12,7 @@ import sys
 import glob
 import cv2
 import numpy as np
+from project_resolver import resolve_project_dir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -57,10 +58,7 @@ def clean_image_surgical(in_path, out_path):
 
 def clean_directory(target_path):
     # Resolve target directory
-    if os.path.isabs(target_path) and os.path.exists(target_path):
-        proj_dir = target_path
-    else:
-        proj_dir = os.path.join(BASE_DIR, target_path)
+    proj_dir = resolve_project_dir(target_path)
 
     if not os.path.exists(proj_dir):
         print(f"[ERROR] Directory does not exist: {proj_dir}")

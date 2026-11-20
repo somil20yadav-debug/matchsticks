@@ -102,6 +102,16 @@
       "easing": "easeOutQuad"
     },
     {
+      "word": "expedition",
+      "score": 1.0,
+      "cue": "20.5",
+      "t_in": 114.2,
+      "t_out": 115.8,
+      "duration": 1.6,
+      "zoom": 1.075,
+      "easing": "easeOutQuad"
+    },
+    {
       "word": "stranger",
       "score": 1.0,
       "cue": "23.4",
@@ -182,6 +192,16 @@
       "easing": "easeOutQuad"
     },
     {
+      "word": "compression",
+      "score": 1.0,
+      "cue": "41.12",
+      "t_in": 231.5,
+      "t_out": 233.3,
+      "duration": 1.8,
+      "zoom": 1.085,
+      "easing": "easeOutQuad"
+    },
+    {
       "word": "never",
       "score": 0.9,
       "cue": "44.2",
@@ -229,6 +249,16 @@
       "t_out": 304.207,
       "duration": 1.25,
       "zoom": 1.051,
+      "easing": "easeOutQuad"
+    },
+    {
+      "word": "undiscovered",
+      "score": 1.0,
+      "cue": "53.18",
+      "t_in": 303.8,
+      "t_out": 305.5,
+      "duration": 1.7,
+      "zoom": 1.075,
       "easing": "easeOutQuad"
     },
     {
@@ -1297,7 +1327,7 @@
       "t1": 192.475,
       "duration": 9.2,
       "img": "img/s33.jpg",
-      "text": "THEORY 5: SPACESHIP",
+      "text": "THEORY 5: 1946 SCI-FI",
       "pos": "",
       "extra": "",
       "base_effect": {
@@ -1948,7 +1978,7 @@
       "t1": 317.725,
       "duration": 5.925,
       "img": "card",
-      "text": "WHAT HIT SIBERIA?|A: ASTEROID   B: COMET",
+      "text": "COULD AN AIRBURST|HIT YOUR CITY TODAY?",
       "pos": "big",
       "extra": "",
       "base_effect": {

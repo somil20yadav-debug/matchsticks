@@ -16,11 +16,49 @@ import csv, json, math, os, sys
 import numpy as np
 from scipy.io import wavfile
 from scipy.signal import butter, lfilter
+from project_resolver import resolve_project_dir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# --- DSP Sound Synthesizers ---
+# --- Studio Sample Loader (Matchsticks Audio v2) ---
+
+SFX_LIB_DIR = os.path.join(BASE_DIR, "audio", "sfx_library")
+MUSIC_LIB_DIR = os.path.join(BASE_DIR, "audio", "music_library")
+
+_SAMPLE_CACHE = {}
+
+def load_studio_sample(category, filename, fs):
+    """Loads a studio-recorded WAV sound effect from the persistent library, caching in memory."""
+    cache_key = (category, filename, fs)
+    if cache_key in _SAMPLE_CACHE:
+        return _SAMPLE_CACHE[cache_key].copy()
+
+    file_path = os.path.join(SFX_LIB_DIR, category, filename)
+    if not os.path.exists(file_path):
+        return None
+
+    import soundfile as sf
+    import subprocess, tempfile
+
+    temp_wav = os.path.join(tempfile.gettempdir(), f"sfx_{os.getpid()}_{np.random.randint(1000,9999)}.wav")
+    cmd = [
+        "ffmpeg", "-y", "-i", file_path,
+        "-ar", str(fs), "-ac", "1", "-c:a", "pcm_s16le",
+        temp_wav
+    ]
+    try:
+        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        data, _ = sf.read(temp_wav)
+        os.remove(temp_wav)
+        float_data = data.astype(np.float32)
+        _SAMPLE_CACHE[cache_key] = float_data
+        return float_data.copy()
+    except Exception:
+        if os.path.exists(temp_wav):
+            try: os.remove(temp_wav)
+            except: pass
+        return None
 
 def butter_lowpass(data, cutoff, fs, order=4):
     nyq = 0.5 * fs
@@ -172,9 +210,54 @@ SFX_RULES = [
 ]
 
 
+def load_cinematic_music_bed(fs, total_samples, project_dir=None):
+    """Loads a single cohesive, smooth cinematic background track without annoying procedural chirps."""
+    music_path = None
+    if project_dir:
+        for m_name in ["music.mp3", "music.wav", "Dark_Walk.mp3"]:
+            cand = os.path.join(project_dir, m_name)
+            if os.path.exists(cand):
+                music_path = cand
+                break
+
+    if not music_path or not os.path.exists(music_path):
+        for global_m in ["Gathering_Darkness.mp3", "Lightless_Dawn.mp3", "Dark_Walk.mp3", "Darkling.mp3"]:
+            # Check in music_library first
+            cand_lib = os.path.join(MUSIC_LIB_DIR, global_m)
+            if os.path.exists(cand_lib):
+                music_path = cand_lib
+                break
+            # Check in audio root
+            cand = os.path.join(BASE_DIR, "audio", global_m)
+            if os.path.exists(cand):
+                music_path = cand
+                break
+    if os.path.exists(music_path):
+        import subprocess, tempfile, soundfile as sf
+        temp_wav = os.path.join(tempfile.gettempdir(), f"music_bed_{os.getpid()}.wav")
+        duration_sec = total_samples / fs
+        cmd = [
+            "ffmpeg", "-y", "-ss", "0", "-i", music_path,
+            "-t", str(duration_sec + 2.0),
+            "-ar", str(fs), "-ac", "1", "-c:a", "pcm_s16le",
+            temp_wav
+        ]
+        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        data, _ = sf.read(temp_wav)
+        try: os.remove(temp_wav)
+        except: pass
+        if len(data) < total_samples:
+            padded = np.zeros(total_samples, dtype=np.float32)
+            padded[:len(data)] = data.astype(np.float32)
+            return padded
+        return data[:total_samples].astype(np.float32)
+
+    return generate_drone_bed(fs, total_samples / fs)
+
+
 def auto_build_cinematic_audio(slug):
     """Automatically constructs the complete cinematic mix for any project slug."""
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     if not os.path.exists(project_dir):
         sys.exit(f"[ERROR] Project directory '{project_dir}' not found.")
 
@@ -204,7 +287,34 @@ def auto_build_cinematic_audio(slug):
 
     sfx_track = np.zeros(total_samples, dtype=np.float32)
 
-    def add_sfx(audio_arr, start_sec, volume=1.0):
+    sfx_manifest_path = os.path.join(project_dir, "sfx_manifest.json")
+    disabled_ids = set()
+    if os.path.exists(sfx_manifest_path):
+        try:
+            with open(sfx_manifest_path, "r", encoding="utf-8") as mf:
+                old_m = json.load(f)
+                disabled_ids = {x.get("id") for x in old_m if not x.get("enabled", True)}
+        except Exception:
+            pass
+
+    sfx_manifest = []
+
+    def add_sfx(audio_arr, start_sec, volume=1.0, cue_name="sfx", category="sfx"):
+        cue_id = len(sfx_manifest) + 1
+        is_enabled = (cue_id not in disabled_ids)
+        sfx_manifest.append({
+            "id": cue_id,
+            "t": round(float(start_sec), 3),
+            "name": cue_name,
+            "category": category,
+            "volume": round(float(volume), 2),
+            "enabled": is_enabled
+        })
+
+        if not is_enabled:
+            print(f"  [SFX-MUTED] Cue #{cue_id} '{cue_name}' at {start_sec:.2f}s is disabled by user.")
+            return
+
         start_idx = max(0, int(start_sec * fs))
         end_idx = min(start_idx + len(audio_arr), total_samples)
         add_len = end_idx - start_idx
@@ -216,30 +326,34 @@ def auto_build_cinematic_audio(slug):
     stickers_added = 0
     punchins_added = 0
 
+    studio_whoosh = load_studio_sample("whooshes", "whoosh-medium-soft.wav", fs)
+    studio_slam = load_studio_sample("impacts", "cinematic-slam-big.wav", fs)
+    studio_pop = load_studio_sample("pops", "pop-medium-bubble.wav", fs)
+
     if os.path.exists(edl_path):
         with open(edl_path, "r", encoding="utf-8") as f:
             edl = json.load(f)
 
-        # Scene Transitions
+        # Scene Transitions (Camera Drifts & Cuts)
         for sc in edl.get("scenes", []):
             t0 = sc.get("t0", 0.0)
             if t0 > 0.1:  # skip beginning of video
-                whoosh = generate_whoosh(fs, duration=0.7)
-                add_sfx(whoosh, max(0.0, t0 - 0.2), volume=0.40)
+                whoosh_audio = studio_whoosh if studio_whoosh is not None else generate_whoosh(fs, duration=0.7)
+                add_sfx(whoosh_audio, max(0.0, t0 - 0.2), volume=0.35, cue_name=f"cut_whoosh_{sc.get('id', '')}", category="transition")
                 transitions_added += 1
 
             # Sticker Overlays
             for ov in sc.get("overlays", []):
                 t_st = ov.get("t", t0)
-                pop = generate_sticker_pop(fs)
-                add_sfx(pop, t_st, volume=0.55)
+                pop_audio = studio_pop if studio_pop is not None else generate_sticker_pop(fs)
+                add_sfx(pop_audio, t_st, volume=0.45, cue_name=f"sticker_{ov.get('name', 'pop')}", category="sticker")
                 stickers_added += 1
 
-        # Punch-ins
+        # Punch-ins / Ken Burns Drift Switches
         for p in edl.get("punch_ins", []):
             t_in = p.get("t_in", 0.0)
-            punch_hit = generate_impact_punch(fs, duration=0.8)
-            add_sfx(punch_hit, t_in, volume=0.50)
+            punch_audio = studio_slam if studio_slam is not None else generate_impact_punch(fs, duration=0.8)
+            add_sfx(punch_audio, t_in, volume=0.40, cue_name="punch_in_hit", category="camera_impact")
             punchins_added += 1
 
         print(f"[OK] Added {transitions_added} scene whooshes, {punchins_added} punch-in hits, and {stickers_added} sticker pop cues from EDL.")
@@ -247,6 +361,9 @@ def auto_build_cinematic_audio(slug):
     # 2. Semantic Word-Level SFX from WORDS.tsv
     sfx_cues_added = 0
     rule_last_played = {i: -999.0 for i in range(len(SFX_RULES))}
+
+    studio_massive_slam = load_studio_sample("impacts", "cinematic-slam-massive.wav", fs)
+    studio_bass_rumble = load_studio_sample("impacts", "bass-rumble-long.wav", fs)
 
     if os.path.exists(words_path):
         with open(words_path, "r", encoding="utf-8") as f:
@@ -262,33 +379,42 @@ def auto_build_cinematic_audio(slug):
                     if word in rule["keywords"]:
                         if start_t - rule_last_played[r_idx] >= rule["cooldown"]:
                             rule_last_played[r_idx] = start_t
-                            audio_chunk = rule["generator"](fs)
                             vol = rule["volume"]
-                            add_sfx(audio_chunk, start_t, volume=vol)
+                            if r_idx == 0 and studio_massive_slam is not None:
+                                audio_chunk = studio_massive_slam
+                            elif r_idx == 1 and studio_slam is not None:
+                                audio_chunk = studio_slam
+                            else:
+                                audio_chunk = rule["generator"](fs)
+                            add_sfx(audio_chunk, start_t, volume=vol, cue_name=f"word_{word}", category="semantic")
                             sfx_cues_added += 1
 
                             # Repeats (for ticking clocks, etc.)
                             if "repeat" in rule:
                                 for rep_i in range(1, rule["repeat"]):
                                     rep_t = start_t + (rep_i * rule["repeat_interval"])
-                                    add_sfx(rule["generator"](fs), rep_t, volume=vol)
+                                    add_sfx(rule["generator"](fs), rep_t, volume=vol * 0.8, cue_name=f"tick_{rep_i}", category="rhythm")
                                     sfx_cues_added += 1
                             break
         print(f"[OK] Added {sfx_cues_added} semantic SFX triggers from word timestamps.")
 
-    # 3. Atmospheric Tension Drone Bed
-    drone = generate_drone_bed(fs, total_sec)
+    # Write SFX manifest so user can easily toggle/remove any sound effect
+    with open(sfx_manifest_path, "w", encoding="utf-8") as mf:
+        json.dump(sfx_manifest, mf, indent=2)
+    print(f"[OK] Saved SFX manifest -> {sfx_manifest_path} ({len(sfx_manifest)} total cues logged)")
+
+    # 3. Single Cohesive Cinematic Background Soundtrack (Zero Annoying Procedural Clicks)
+    music_bed = load_cinematic_music_bed(fs, total_samples, project_dir=project_dir)
 
     # 4. Intelligent Sidechain Ducking
-    print("Applying dynamic sidechain speech ducking (-14dB under VO)...")
+    print("Applying smooth sidechain speech ducking (-14dB under VO)...")
     vo_envelope = butter_lowpass(np.abs(vo_float), cutoff=3.5, fs=fs)
-    # Duck drone by 65% when speech envelope is present
-    duck_gain = 1.0 - 0.65 * np.clip(vo_envelope / 0.12, 0, 1.0)
-    drone_ducked = drone * duck_gain
+    duck_gain = 1.0 - 0.70 * np.clip(vo_envelope / 0.12, 0, 1.0)
+    music_ducked = music_bed * duck_gain
 
-    # 5. Master Summing & Soft Limiting
-    print("Summing master audio tracks (VO + SFX + Drone Bed)...")
-    master = (vo_float * 0.95) + (sfx_track * 0.70) + (drone_ducked * 0.65)
+    # 5. Master Summing: 3-Layer Audio Master (VO + Real Studio SFX + Ducked Dark Ambient Bed)
+    print("Summing 3-layer master: Clean VO (95%) + Real Studio SFX (35%) + Ducked Ambient Bed (20%)...")
+    master = (vo_float * 0.95) + (sfx_track * 0.35) + (music_ducked * 0.20)
 
     peak = np.max(np.abs(master))
     if peak > 0.95:

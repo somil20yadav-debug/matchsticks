@@ -14,6 +14,7 @@ Usage:
 """
 
 import csv, json, os, re, sys
+from project_resolver import resolve_project_dir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -92,7 +93,7 @@ def build_retention_story(slug, topic, title=None, style_preset="cinematic"):
 
 
 def save_story_project(slug, beats, title=None, style_preset="cinematic"):
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     os.makedirs(project_dir, exist_ok=True)
     os.makedirs(os.path.join(project_dir, "img", "clean"), exist_ok=True)
 

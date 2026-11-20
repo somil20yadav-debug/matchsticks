@@ -11,6 +11,7 @@ Usage:
 
 import asyncio, csv, json, os, re, subprocess, sys
 from scipy.io import wavfile
+from project_resolver import resolve_project_dir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -75,37 +76,194 @@ def script_to_ssml(text, voice="en-US-ChristopherNeural"):
 
 
 async def synthesize_edge_tts(text, out_mp3, voice="en-US-ChristopherNeural"):
-    """Synthesizes text using Microsoft Edge TTS (100% free, natural documentary narrator)."""
+    """Synthesizes text using Microsoft Edge TTS with dynamic emotion tags & micro-pauses."""
     import edge_tts
-    ssml = script_to_ssml(text, voice)
-    if ssml:
-        communicate = edge_tts.Communicate(ssml, voice)
-    else:
+    import soundfile as sf
+    import numpy as np
+    import tempfile
+
+    has_tags = bool(re.search(r'\[(whisper|urgent|serious|pause|break|ominous|calm|gasp).*?\]', text, re.IGNORECASE))
+    
+    if not has_tags:
         cleaned = clean_script_tags(text)
         communicate = edge_tts.Communicate(cleaned, voice, rate="+2%", pitch="-2Hz")
-    await communicate.save(out_mp3)
+        await communicate.save(out_mp3)
+        return out_mp3
+
+    # Dynamic segment synthesis for high emotional range
+    lines = [l.strip() for l in text.strip().splitlines() if l.strip()]
+    audio_chunks = []
+    sr = 24000
+    temp_dir = tempfile.gettempdir()
+    temp_files = []
+    idx = 0
+
+    for line in lines:
+        if re.match(r'^\[(SFX|CUE|VISUAL):.*\]$', line, re.IGNORECASE):
+            continue
+
+        # Standalone pause
+        standalone_pause = re.match(r'^\[(pause|break):?\s*([\d\.]+(?:ms|s)?)?\]$', line, re.IGNORECASE)
+        if standalone_pause:
+            dur_str = standalone_pause.group(2) or "500ms"
+            ms = float(dur_str.replace("ms", "").replace("s", ""))
+            if "s" in dur_str and "ms" not in dur_str:
+                ms *= 1000
+            samples = int(sr * (ms / 1000.0))
+            audio_chunks.append(np.zeros(samples, dtype=np.float32))
+            continue
+
+        # Split by inline pauses
+        parts = re.split(r'(\[(?:pause|break):?\s*[\d\.]+(?:ms|s)?\])', line, flags=re.IGNORECASE)
+        for part in parts:
+            part = part.strip()
+            if not part:
+                continue
+            pause_m = re.match(r'^\[(?:pause|break):?\s*([\d\.]+(?:ms|s)?)?\]$', part, re.IGNORECASE)
+            if pause_m:
+                dur_str = pause_m.group(1) or "500ms"
+                ms = float(dur_str.replace("ms", "").replace("s", ""))
+                if "s" in dur_str and "ms" not in dur_str:
+                    ms *= 1000
+                samples = int(sr * (ms / 1000.0))
+                audio_chunks.append(np.zeros(samples, dtype=np.float32))
+                continue
+
+            rate = "+0%"
+            pitch = "+0Hz"
+            volume = "+0%"
+
+            if "[whisper]" in part.lower():
+                part = re.sub(r'\[whisper\]', '', part, flags=re.IGNORECASE).strip()
+                rate = "-10%"
+                pitch = "-4Hz"
+                volume = "-5%"
+            elif "[urgent]" in part.lower():
+                part = re.sub(r'\[urgent\]', '', part, flags=re.IGNORECASE).strip()
+                rate = "+16%"
+                pitch = "+4Hz"
+                volume = "+10%"
+            elif "[serious]" in part.lower() or "[ominous]" in part.lower():
+                part = re.sub(r'\[(serious|ominous)\]', '', part, flags=re.IGNORECASE).strip()
+                rate = "-4%"
+                pitch = "-6Hz"
+                volume = "+5%"
+
+            clean_part = re.sub(r'\[.*?\]', '', part).strip()
+            if not clean_part:
+                continue
+
+            seg_mp3 = os.path.join(temp_dir, f"edge_seg_{os.getpid()}_{idx}.mp3")
+            seg_wav = os.path.join(temp_dir, f"edge_seg_{os.getpid()}_{idx}.wav")
+            temp_files.extend([seg_mp3, seg_wav])
+            idx += 1
+
+            comm = edge_tts.Communicate(clean_part, voice, rate=rate, pitch=pitch, volume=volume)
+            await comm.save(seg_mp3)
+
+            subprocess.run([
+                "ffmpeg", "-y", "-i", seg_mp3,
+                "-ar", str(sr), "-ac", "1", "-c:a", "pcm_s16le",
+                seg_wav
+            ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            data, _ = sf.read(seg_wav)
+            audio_chunks.append(data.astype(np.float32))
+            # Natural micro-pause between clauses
+            audio_chunks.append(np.zeros(int(sr * 0.22), dtype=np.float32))
+
+    if not audio_chunks:
+        cleaned = clean_script_tags(text)
+        comm = edge_tts.Communicate(cleaned, voice)
+        await comm.save(out_mp3)
+        return out_mp3
+
+    combined = np.concatenate(audio_chunks)
+    temp_combined_wav = os.path.join(temp_dir, f"edge_combined_{os.getpid()}.wav")
+    sf.write(temp_combined_wav, combined, sr)
+
+    subprocess.run([
+        "ffmpeg", "-y", "-i", temp_combined_wav,
+        out_mp3
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    for f in temp_files + [temp_combined_wav]:
+        try: os.remove(f)
+        except: pass
+
     return out_mp3
 
 
 def synthesize_kokoro_tts(text, out_wav, voice="am_adam"):
-    """Synthesizes text using local Kokoro TTS (100% free open-source model)."""
+    """Synthesizes text using local Kokoro TTS with dynamic pause & emotion tag support."""
     from kokoro import KPipeline
     import soundfile as sf
     import numpy as np
+    import re
 
-    cleaned = clean_script_tags(text)
-    lang_code = 'b' if voice.startswith('b') else 'a'
+    primary_voice = voice.split(',')[0].strip()
+    lang_code = 'b' if primary_voice.startswith('b') else 'a'
     pipeline = KPipeline(lang_code=lang_code)
-    generator = pipeline(cleaned, voice=voice, speed=1.0)
-    all_audio = []
-    sr = 24000
-    for _, _, audio in generator:
-        all_audio.append(audio)
     
-    if all_audio:
-        combined = np.concatenate(all_audio)
+    sr = 24000
+    audio_chunks = []
+    lines = [l.strip() for l in text.strip().splitlines() if l.strip()]
+
+    for line in lines:
+        if re.match(r'^\[(SFX|CUE|VISUAL):.*\]$', line, re.IGNORECASE):
+            continue
+
+        # Standalone pause
+        standalone_pause = re.match(r'^\[(pause|break):?\s*([\d\.]+(?:ms|s)?)?\]$', line, re.IGNORECASE)
+        if standalone_pause:
+            dur_str = standalone_pause.group(2) or "120ms"
+            ms = float(dur_str.replace("ms", "").replace("s", ""))
+            if "s" in dur_str and "ms" not in dur_str:
+                ms *= 1000
+            ms = min(ms, 150.0)  # Cap pauses so they never create robotic dead silence
+            samples = int(sr * (ms / 1000.0))
+            audio_chunks.append(np.zeros(samples, dtype=np.float32))
+            continue
+
+        # In-line pauses
+        parts = re.split(r'(\[(?:pause|break):?\s*[\d\.]+(?:ms|s)?\])', line, flags=re.IGNORECASE)
+        for part in parts:
+            part = part.strip()
+            if not part:
+                continue
+            pause_m = re.match(r'^\[(?:pause|break):?\s*([\d\.]+(?:ms|s)?)?\]$', part, re.IGNORECASE)
+            if pause_m:
+                dur_str = pause_m.group(1) or "120ms"
+                ms = float(dur_str.replace("ms", "").replace("s", ""))
+                if "s" in dur_str and "ms" not in dur_str:
+                    ms *= 1000
+                ms = min(ms, 150.0)  # Snappy micro-pause
+                samples = int(sr * (ms / 1000.0))
+                audio_chunks.append(np.zeros(samples, dtype=np.float32))
+                continue
+
+            speed = 0.98
+            if "[whisper]" in part.lower() or "[serious]" in part.lower():
+                speed = 0.94
+            elif "[urgent]" in part.lower() or "[fast]" in part.lower():
+                speed = 1.08
+
+            clean_part = re.sub(r'\[.*?\]', '', part).strip()
+            if not clean_part:
+                continue
+
+            generator = pipeline(clean_part, voice=voice, speed=speed)
+            for _, _, audio in generator:
+                audio_chunks.append(audio)
+            
+            # Tight 30ms acoustic glue (zero robotic dead air)
+            audio_chunks.append(np.zeros(int(sr * 0.03), dtype=np.float32))
+
+    if audio_chunks:
+        combined = np.concatenate(audio_chunks)
         sf.write(out_wav, combined, sr)
         return out_wav
+        
     raise RuntimeError("Kokoro failed to produce audio.")
 
 
@@ -135,10 +293,11 @@ def synthesize_elevenlabs(text, out_mp3, api_key=None, voice_id="21m00Tcm4TlvDq8
 
 
 def convert_to_broadcast_wav(in_path, out_wav):
-    """Converts any audio file to 24kHz mono PCM WAV."""
+    """Converts any audio file to 24kHz mono PCM WAV with warm broadcast proximity mastering."""
     cmd = [
         "ffmpeg", "-y", "-i", in_path,
         "-vn", "-acodec", "pcm_s16le", "-ar", "24000", "-ac", "1",
+        "-af", "equalizer=f=120:width_type=o:w=1:g=3.5,equalizer=f=4000:width_type=o:w=1:g=2.0,acompressor=threshold=-16dB:ratio=3.5:attack=5:release=50:makeup=2dB",
         out_wav
     ]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -201,7 +360,7 @@ def update_scene_timings(project_dir, words):
 
 
 def process_voice(slug, mode="ingest", engine="edge", input_file=None, voice_name=None):
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     os.makedirs(project_dir, exist_ok=True)
     dest_vo = os.path.join(project_dir, "VO.wav")
     words_tsv = os.path.join(project_dir, "WORDS.tsv")
@@ -222,12 +381,9 @@ def process_voice(slug, mode="ingest", engine="edge", input_file=None, voice_nam
         elif os.path.exists(script_md):
             with open(script_md, "r", encoding="utf-8") as f:
                 content = f.read()
-                # Extract narration lines
+                # Extract narration lines (preserve line breaks for emotional tag parsing)
                 narration_lines = [l.strip() for l in content.splitlines() if l.strip() and not l.startswith("#")]
-                narration_text = " ".join(narration_lines)
-            with open(lines_tsv, "r", encoding="utf-8") as f:
-                reader = csv.DictReader(f, delimiter="\t")
-                narration_text = " ".join([r.get("text", "") for r in reader if r.get("text")])
+                narration_text = "\n".join(narration_lines)
 
         if not narration_text:
             sys.exit(f"[ERROR] No SCRIPT.md or LINES.tsv found in {project_dir} to synthesize.")

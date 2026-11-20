@@ -12,6 +12,7 @@ Providers:
 
 import base64, csv, json, os, sys, time, urllib.parse, requests
 from PIL import Image, ImageDraw, ImageFont
+from project_resolver import resolve_project_dir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -144,7 +145,7 @@ def _generate_flow(prompt, output_path, ref_image=None):
 
 def batch_generate_project(slug, provider="auto", force=False):
     """Reads SHOTS.tsv and automatically generates all missing scene images."""
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     shots_path = os.path.join(project_dir, "SHOTS.tsv")
     clean_dir = os.path.join(project_dir, "img", "clean")
     os.makedirs(clean_dir, exist_ok=True)

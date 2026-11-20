@@ -21,6 +21,7 @@ sys.path.append(SCRIPTS_DIR)
 
 from caption_renderer import CaptionEngine, resolve_font
 from clean_watermarks import clean_image_surgical
+from project_resolver import resolve_project_dir
 
 
 def slice_audio(mix_path, out_slice_path, start_t, duration_t):
@@ -58,7 +59,7 @@ def load_shot_composition(project_dir):
 
 
 def build_short_video(slug, start_t=0.0, duration=15.0, short_name="short_9x16", font="anton", style="minimal", mode="black", hook_title=None, badge_text=None, fps=30):
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     if not os.path.exists(project_dir):
         sys.exit(f"[ERROR] Project '{slug}' not found.")
 

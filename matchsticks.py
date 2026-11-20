@@ -19,6 +19,7 @@ from PIL import Image
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 sys.path.append(SCRIPTS_DIR)
+from project_resolver import resolve_project_dir, get_relative_slug
 
 
 def print_menu():
@@ -63,7 +64,7 @@ def print_menu():
 
 
 def init_project(slug):
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     for d in ["img", "img/clean", "characters", "elements/cut", "frames", "exports"]:
         os.makedirs(os.path.join(project_dir, d), exist_ok=True)
     return project_dir
@@ -89,8 +90,10 @@ def main():
         print_menu()
         sys.exit(1)
 
-    slug = sys.argv[2].lower()
-    project_dir = os.path.join(BASE_DIR, slug)
+    raw_slug = sys.argv[2].lower()
+    project_dir = resolve_project_dir(raw_slug)
+    slug = get_relative_slug(project_dir)
+    base_name = os.path.basename(project_dir)
 
     if action == "init":
         init_project(slug)
@@ -135,7 +138,7 @@ def main():
         exports_dir = os.path.join(project_dir, "exports")
         os.makedirs(exports_dir, exist_ok=True)
         edl_path = os.path.join(project_dir, "edl.json")
-        out_mp4 = os.path.join(exports_dir, f"{slug}_master_1080p.mp4")
+        out_mp4 = os.path.join(exports_dir, f"{base_name}_master_1080p.mp4")
 
         font = "anton"
         style = "minimal"

@@ -8,12 +8,13 @@ Usage:
 """
 
 import os, sys, json, csv, glob
+from project_resolver import resolve_project_dir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def build_qc_player(slug):
-    project_dir = os.path.join(BASE_DIR, slug)
+    project_dir = resolve_project_dir(slug)
     if not os.path.exists(project_dir):
         sys.exit(f"[ERROR] Project '{slug}' not found at {project_dir}")
 

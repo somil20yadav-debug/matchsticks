@@ -10,24 +10,19 @@ _boma_test/
 *BOMA*
 boma_director.py
 director.py
+test_fenrir.wav
 
-# --- 2. OTHER PERSONAL YOUTUBE DOCUMENTARY PROJECTS ---
-# Kept safely on local machine; only 'tunguska' is published as the example
-/antikythera/
-/moon10x/
-/ocean-crossing/
-/samudragupta/
-/short/
-/sun5s/
-/terracotta/
-/ulfberht/
-/yasuke/
-/clips/
-/dark_forest/
-/herculaneum/
-/nalanda/
-/strasbourg/
-/yakuza/
+# --- 2. PERSONAL YOUTUBE DOCUMENTARY PROJECTS & SHORTS ---
+# Kept safely on local machine; only 'long_videos/tunguska' is tracked as reference
+long_videos/*
+!long_videos/tunguska/
+shorts/
+clips/
+moon10x/
+ocean-crossing/
+audio/
+branding/
+fonts/
 
 # --- 3. LARGE MEDIA & RENDER ASSETS (Avoid GitHub limits) ---
 *.mp4
@@ -48,10 +43,10 @@ director.py
 **/elements/raw/
 demo_*/
 qc*.jpg
-tunguska/img/
-tunguska/exports/
-tunguska/fonts/
-tunguska/qc_player.html
+**/tunguska/img/
+**/tunguska/exports/
+**/tunguska/fonts/
+**/tunguska/qc_player.html
 *test*
 *crop*
 *unmarked*

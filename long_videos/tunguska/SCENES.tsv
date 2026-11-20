@@ -58,7 +58,7 @@ cue	img	text	pos	extra
 +31.6	elements/cut/blackhole.png		auto	slideR
 32.0	img/s32.jpg	THEORY 4: TESLA		fx:shake
 +32.0	elements/cut/tesla.png		auto	rise
-33.0	img/s33.jpg	THEORY 5: SPACESHIP		
+33.0	img/s33.jpg	THEORY 5: 1946 SCI-FI		
 +33.2	elements/cut/alien_stickman.png		auto	pop
 +33.14	peek:left-edge:shocked		auto	peek
 34.0	img/s34.jpg			
@@ -96,6 +96,6 @@ cue	img	text	pos	extra
 53.0	img/s53.jpg			
 +53.1	elements/cut/telescope.png		auto	slideR
 54.0	img/s54.jpg			"fx:punch@""next"""
-55.0	card	WHAT HIT SIBERIA?|A: ASTEROID   B: COMET	big	
+55.0	card	COULD AN AIRBURST|HIT YOUR CITY TODAY?	big	
 +55.13	peek:left-edge:pointing		auto	peek
 56.0	img/s56.jpg			
